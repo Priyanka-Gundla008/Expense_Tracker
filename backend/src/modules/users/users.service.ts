@@ -42,6 +42,30 @@ export class UsersService {
     });
   }
 
+  async updateResetToken(
+    userId: string,
+    token: string,
+    expiry: Date,
+  ) {
+    return this.usersRepository.update(userId, {
+      resetPasswordToken: token,
+      resetPasswordExpires: expiry,
+    });
+  }
+
+  async findByResetToken(token: string) {
+    return this.usersRepository.findOne({ where: { resetPasswordToken: token } });
+  }
+
+  async updatePassword(userId: string, hashedPassword: string) {
+    return this.usersRepository.update(userId, {
+      password: hashedPassword,
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
+    });
+  }
+
+
 }
 
 

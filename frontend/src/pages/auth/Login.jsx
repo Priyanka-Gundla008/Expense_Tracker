@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, AccountCircle, Lock } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../services/authService";
+import { login } from "../../services/authService";
 
 function Login() {
     const theme = useTheme();
@@ -93,7 +93,7 @@ function Login() {
         };
 
         try {
-            const res = await auth(user);
+            const res = await login(user);
             const { accessToken, user: userData } = res.data;
             localStorage.setItem("accessToken", accessToken);
             localStorage.setItem("user", JSON.stringify(userData));
@@ -229,7 +229,7 @@ function Login() {
                                 label="Remember Me"
                             />
                             <Link
-                                href="#"
+                                href="/forgot-password"
                                 underline="hover"
                                 sx={{ fontSize: 14, color: theme.palette.primary.main }}
                             >

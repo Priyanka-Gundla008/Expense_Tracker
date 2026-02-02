@@ -35,6 +35,12 @@ export class User {
   @Column({ default: false })
   acceptedTerms: boolean;
 
+  @Column({ nullable: true })
+  resetPasswordToken: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  resetPasswordExpires: Date;
+
   @CreateDateColumn()
   createdAt: Date;
 
