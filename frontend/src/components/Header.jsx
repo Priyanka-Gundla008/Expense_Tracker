@@ -99,12 +99,6 @@ export default function Header() {
 
       {/* Right side */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-        {/* Notifications */}
-        <IconButton onClick={handleNotifClick} color="inherit">
-          <Badge badgeContent={notifications.length} color="error">
-            <Notifications />
-          </Badge>
-        </IconButton>
 
         <Popover
           open={notifOpen}

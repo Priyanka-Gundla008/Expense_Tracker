@@ -15,8 +15,8 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, AccountCircle, Lock, Email, Work } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import TermsDialog from "./TermsAndConditions";
-import { createUser } from "../services/userService";
+import TermsDialog from "../TermsAndConditions";
+import { createUser } from "../../services/userService";
 
 function Signup() {
   const theme = useTheme();

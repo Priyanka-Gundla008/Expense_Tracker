@@ -1,10 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "../pages/Login";
-import Signup from "../pages/Signup";
+import Login from "../pages/auth/Login";
+import Signup from "../pages/auth/Signup";
 import Dashboard from "../components/Dashboard";
 import ExpensePage from "../pages/ExpensePage";
 import Layout from "../layouts/ Layout";
 import Category from "../pages/CategoryPage";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import PasswordResetConfirmation from "../pages/auth/EmailConfirmation";
+import ResetPassword from "../pages/auth/ResetPassword";
 
 //const isAuthenticated = () => !!localStorage.getItem("token");
 
@@ -17,6 +20,9 @@ function AppRouter() {
         {/* Public Routes (NO Sidebar / Header) */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/email-confirmation" element={<PasswordResetConfirmation />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Protected Routes (WITH Sidebar & Header) */}
         <Route

@@ -16,16 +16,69 @@ import {
 import RechartsPie from "./dashboard/PieChart";
 import MonthlyExpenseLine from "./dashboard/GraphChart";
 import { getExpenses } from "../services/expenseService";
+import IncomeDialog from "./dashboard/IncomeDialog";
+import { saveIncome, getSummaryData } from "../services/incomeService";
+
 function Dashboard() {
   const theme = useTheme();
   const [recentExpenses, setRecentExpenses] = useState([]);
+  const [openIncomeModal, setOpenIncomeModal] = useState(false);
+  const [incomeValue, setIncomeValue] = useState("");
+  const [summaryData, setSummaryData] = useState([
+    { title: "Total Income", value: 0, color: "#def5e0ff", textColor: "#2e7d32" },
+    { title: "Total Expenses", value: 0, color: "#f7d7dcff", textColor: "#c62828" },
+    { title: "Balance", value: 0, color: "#d3e8f7ff", textColor: "#1565c0" },
+  ]);
 
-  const summaryData = [
-    { title: "Total Income", value: "₹ 1,20,000", color: "#def5e0ff", textColor: "#2e7d32" },
-    { title: "Total Expenses", value: "₹ 75,000", color: "#f7d7dcff", textColor: "#c62828" },
-    { title: "Balance", value: "₹ 45,000", color: "#d3e8f7ff", textColor: "#1565c0" },
 
-  ];
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1; // JS month is 0-indexed
+
+  const fetchSummaryData = async () => {
+    try {
+      // 1️⃣ Get Income
+      const res = await getSummaryData(currentYear, currentMonth);
+      const incomeData = res.data?.[0]; // backend returns array
+
+      const income = incomeData ? Number(incomeData.income) : 0;
+      const totalExpenses = incomeData ? Number(incomeData.expenses || 0) : 0;
+      const balance = income - totalExpenses;
+
+      setSummaryData([
+        { title: "Total Income", value: income, color: "#def5e0ff", textColor: "#2e7d32" },
+        { title: "Total Expenses", value: totalExpenses, color: "#f7d7dcff", textColor: "#c62828" },
+        { title: "Balance", value: balance, color: "#d3e8f7ff", textColor: "#1565c0" },
+      ]);
+
+      setIncomeValue(income);
+    } catch (error) {
+      console.error("Error fetching summary data", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSummaryData();
+  }, []);
+
+  const handleSaveIncome = async () => {
+    try {
+      const payload = {
+        year: currentYear,
+        month: currentMonth,
+        income: Number(incomeValue),
+      };
+
+      const response = await saveIncome(payload);
+      setOpenIncomeModal(false);
+      setIncomeValue("");
+
+      fetchSummaryData();
+    } catch (error) {
+      console.error("Failed to save income");
+    }
+  };
+
 
   const fetchRecentExpenses = async () => {
     try {
@@ -73,14 +126,33 @@ function Dashboard() {
               }}
             >
               {summaryData.map((item, index) => (
+                // <Card
+                //   key={index}
+                //   sx={{ borderRadius: "16px", }}
+                //   onClick={() => {
+                //     if (item.title === "Total Income") {
+                //       setIncomeValue(item.rawValue || "");
+                //       setOpenIncomeModal(true);
+                //     }
+                //   }}
+                // >
                 <Card
                   key={index}
                   sx={{
+                    cursor: item.title === "Total Income" ? "pointer" : "default",
                     borderRadius: "16px",
                     boxShadow: "0 6px 15px rgba(0,0,0,0.08)",
                     height: 100,
                   }}
+                  onClick={() => {
+                    if (item.title === "Total Income") {
+                      setIncomeValue(item.value);
+                      setOpenIncomeModal(true);
+                    }
+                  }}
+
                 >
+
                   <CardContent sx={{ p: 0.5 }}>
                     <Box
                       sx={{
@@ -98,8 +170,9 @@ function Dashboard() {
                         {item.title}
                       </Typography>
                       <Typography variant="h6" fontWeight={800} sx={{ color: item.textColor }}>
-                        {item.value}
+                        ₹ {item.value.toLocaleString("en-IN")}
                       </Typography>
+
                     </Box>
                   </CardContent>
                 </Card>
@@ -175,6 +248,15 @@ function Dashboard() {
             <MonthlyExpenseLine />
           </Box>
 
+          <IncomeDialog
+            open={openIncomeModal}
+            onClose={() => setOpenIncomeModal(false)}
+            incomeValue={incomeValue}
+            setIncomeValue={setIncomeValue}
+            onSave={handleSaveIncome}
+          />
+
+
 
 
         </CardContent>
@@ -182,5 +264,6 @@ function Dashboard() {
     </Box>
   );
 }
+
 
 export default Dashboard;
