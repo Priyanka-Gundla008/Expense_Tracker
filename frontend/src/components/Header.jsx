@@ -21,7 +21,6 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import { useNavigate } from "react-router-dom";
 import { getUserById } from "../services/userService";
 
-
 export default function Header() {
   const theme = useTheme();
   const navigator = useNavigate();
@@ -49,8 +48,15 @@ export default function Header() {
   const handleNotifClose = () => setNotifAnchorEl(null);
 
   const handleMenuAction = (action) => {
-    handlePopoverClose();
-    // navigator("/login");
+    handlePopoverClose(); // close popover first
+
+    if (action === "viewProfile") {
+      navigator("/profile?mode=view");
+    }
+
+    if (action === "editProfile") {
+      navigator("/profile?mode=edit");
+    }
   };
 
   const logout = () => {
@@ -66,7 +72,7 @@ export default function Header() {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         const userData = await getUserById(user.id);
-        setUser(userData);
+        setUser(userData.data);
       } catch (error) {
         console.error("Failed to fetch user data:", error);
       }
@@ -94,7 +100,7 @@ export default function Header() {
         fontWeight={600}
         sx={{ display: "flex", alignItems: "center", gap: 1 }}
       >
-        Welcome, {user?.name} <HandshakeIcon sx={{ color: theme.palette.primary.main }} />
+       Welcome, {user?.firstName} {user?.lastName} <HandshakeIcon sx={{ color: theme.palette.primary.main }} />
       </Typography>
 
       {/* Right side */}
@@ -127,7 +133,7 @@ export default function Header() {
               bgcolor: theme.palette.primary.main,
             }}
           >
-            {!user?.profileImage && user?.name?.charAt(0).toUpperCase()}
+            {!user?.profileImage && user?.firstName?.charAt(0).toUpperCase()}
           </Avatar>
         </IconButton>
 
@@ -141,11 +147,17 @@ export default function Header() {
         >
           <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2, minWidth: 200 }}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography fontWeight={600}>{user?.name}</Typography>
+              <Typography fontWeight={600}>{user?.firstName}  {user?.lastName} </Typography>
             </Box>
 
-            <Button variant="outlined" onClick={() => handleMenuAction("viewProfile")}>View Profile</Button>
-            <Button variant="outlined" onClick={() => handleMenuAction("editProfile")}>Edit Profile</Button>
+            <Button variant="outlined" onClick={() => handleMenuAction("viewProfile")}>
+              View Profile
+            </Button>
+
+            <Button variant="outlined" onClick={() => handleMenuAction("editProfile")}>
+              Edit Profile
+            </Button>
+
             <Button color="error" variant="outlined" onClick={logout}>Logout</Button>
 
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>

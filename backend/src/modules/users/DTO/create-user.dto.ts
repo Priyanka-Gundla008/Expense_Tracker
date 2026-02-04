@@ -14,19 +14,34 @@ import { Transform } from 'class-transformer';
 export class CreateUserDto {
 
   @ApiProperty({
-    description: 'Full name of the user',
-    minLength: 3,
-    maxLength: 50,
+    description: 'First name of the user',
+    minLength: 2,
+    maxLength: 30,
   })
   @IsString()
   @IsNotEmpty()
-  @MinLength(3)
-  @MaxLength(50)
-  @Matches(/^[A-Za-z ]+$/, {
-    message: 'Name can contain only letters and spaces',
+  @MinLength(2)
+  @MaxLength(30)
+  @Matches(/^[A-Za-z]+$/, {
+    message: 'First name can contain only letters',
   })
   @Transform(({ value }) => value.trim())
-  name: string;
+  firstName: string;
+
+  @ApiProperty({
+    description: 'Last name of the user',
+    minLength: 1,
+    maxLength: 30,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(30)
+  @Matches(/^[A-Za-z]+$/, {
+    message: 'Last name can contain only letters',
+  })
+  @Transform(({ value }) => value.trim())
+  lastName: string;
 
   @ApiProperty({
     description: 'Valid email address',
@@ -38,18 +53,26 @@ export class CreateUserDto {
   @ApiProperty({
     description:
       'Password must be at least 8 characters, include uppercase, lowercase, number & special character',
-    minLength: 8,
   })
   @IsNotEmpty()
   @MinLength(8)
-  @Matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
-    {
-      message:
-        'Password must contain uppercase, lowercase, number, and special character',
-    },
-  )
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/, {
+    message:
+      'Password must contain uppercase, lowercase, number, and special character',
+  })
   password: string;
+
+  // OPTIONAL FIELDS
+
+  @ApiPropertyOptional({ description: 'Mobile number' })
+  @IsOptional()
+  @IsString()
+  mobile?: string;
+
+  @ApiPropertyOptional({ description: 'Address' })
+  @IsOptional()
+  @IsString()
+  address?: string;
 
   @ApiPropertyOptional({ description: 'Profile image URL' })
   @IsOptional()
@@ -73,15 +96,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(50)
-  @Matches(/^[A-Za-z ]+$/, {
-    message: 'Designation can contain only letters and spaces',
-  })
   designation: string;
 
   @ApiProperty({
-    description: 'Whether the user has accepted Terms & Conditions',
+    description: 'User accepted Terms & Conditions',
   })
-  @IsBoolean({ message: 'acceptedTerms must be true or false' })
+  @IsBoolean()
   acceptedTerms: boolean;
-
 }

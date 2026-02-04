@@ -12,7 +12,10 @@ export class User {
   id: string;
 
   @Column()
-  name: string;
+  firstName: string;
+
+  @Column()
+  lastName: string;
 
   @Column({ unique: true })
   email: string;
@@ -22,6 +25,12 @@ export class User {
 
   @Column({ nullable: true })
   profileImage?: string;
+
+  @Column({ nullable: true })
+  mobile?: string;
+
+  @Column({ nullable: true })
+  address?: string;
 
   @Column({ nullable: true })
   company?: string;
