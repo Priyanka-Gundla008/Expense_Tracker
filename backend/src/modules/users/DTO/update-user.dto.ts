@@ -8,25 +8,16 @@ import {
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
-  @ApiPropertyOptional({ description: 'First name' })
+  @ApiPropertyOptional({ description: 'Name' })
   @IsOptional()
   @IsString()
   @MinLength(2)
   @MaxLength(50)
   @Matches(/^[A-Za-z ]+$/, {
-    message: 'First name can contain only letters and spaces',
+    message: 'Name can contain only letters and spaces',
   })
-  firstName?: string;
+  name?: string;
 
-  @ApiPropertyOptional({ description: 'Last name' })
-  @IsOptional()
-  @IsString()
-  @MinLength(2)
-  @MaxLength(50)
-  @Matches(/^[A-Za-z ]+$/, {
-    message: 'Last name can contain only letters and spaces',
-  })
-  lastName?: string;
 
   @ApiPropertyOptional({ description: 'Mobile number' })
   @IsOptional()

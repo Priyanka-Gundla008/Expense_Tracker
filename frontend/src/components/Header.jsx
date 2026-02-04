@@ -100,7 +100,7 @@ export default function Header() {
         fontWeight={600}
         sx={{ display: "flex", alignItems: "center", gap: 1 }}
       >
-       Welcome, {user?.firstName} {user?.lastName} <HandshakeIcon sx={{ color: theme.palette.primary.main }} />
+       Welcome, {user?.name}<HandshakeIcon sx={{ color: theme.palette.primary.main }} />
       </Typography>
 
       {/* Right side */}
@@ -133,7 +133,7 @@ export default function Header() {
               bgcolor: theme.palette.primary.main,
             }}
           >
-            {!user?.profileImage && user?.firstName?.charAt(0).toUpperCase()}
+            {!user?.profileImage && user?.name?.charAt(0).toUpperCase()}
           </Avatar>
         </IconButton>
 
@@ -147,7 +147,7 @@ export default function Header() {
         >
           <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2, minWidth: 200 }}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography fontWeight={600}>{user?.firstName}  {user?.lastName} </Typography>
+              <Typography fontWeight={600}>{user?.name} </Typography>
             </Box>
 
             <Button variant="outlined" onClick={() => handleMenuAction("viewProfile")}>

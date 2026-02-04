@@ -92,7 +92,7 @@ function Sidebar() {
             fontSize: 40,
           }}
         >
-          {!user?.profileImage && user?.firstName?.charAt(0).toUpperCase()}
+          {!user?.profileImage && user?.name?.charAt(0).toUpperCase()}
         </Avatar>
 
         <Typography
@@ -100,7 +100,7 @@ function Sidebar() {
           fontWeight={600}
           color="text.primary"
         >
-          {user?.firstName} {user?.lastName}
+          {user?.name}
         </Typography>
       </Box>
 

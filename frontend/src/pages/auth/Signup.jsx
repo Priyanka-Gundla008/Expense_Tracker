@@ -12,11 +12,17 @@ import {
   FormControlLabel,
   Link,
   useTheme,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { Visibility, VisibilityOff, AccountCircle, Lock, Email, Work } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import TermsDialog from "../TermsAndConditions";
 import { createUser } from "../../services/userService";
+import { googleLogin } from "../../services/authService";
+import { GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
+
 
 function Signup() {
   const theme = useTheme();
@@ -26,7 +32,6 @@ function Signup() {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    designation: "",
     password: "",
     confirmPassword: "",
     agree: false,
@@ -34,11 +39,15 @@ function Signup() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    severity: "error",
+  });
 
   const [errors, setErrors] = useState({
     name: "",
     email: "",
-    designation: "",
     password: "",
     confirmPassword: "",
     agree: "",
@@ -55,12 +64,6 @@ function Signup() {
     email: (value) => {
       if (!value.trim()) return "Email is required";
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email format";
-      return "";
-    },
-    designation: (value) => {
-      if (!value.trim()) return "Designation is required";
-      if (!/^[A-Za-z ]+$/.test(value)) return "Designation can contain only letters and spaces";
-      if (value.trim().length < 2 || value.trim().length > 50) return "Designation must be 2-50 characters";
       return "";
     },
     password: (value) => {
@@ -128,7 +131,6 @@ function Signup() {
     const user = {
       name: form.name.trim(),
       email: form.email.trim().toLowerCase(),
-      designation: form.designation.trim(),
       password: form.password,
       acceptedTerms: form.agree,
     };
@@ -142,6 +144,33 @@ function Signup() {
     }
   };
 
+  const handleGoogleSuccess = async (response) => {
+    const idToken = response.credential;
+    console.log("idToken", idToken)
+    try {
+      const res = await googleLogin(idToken);
+
+      const { token, user } = res.data;
+
+
+      console.log("res", res.data)
+
+      localStorage.setItem("accessToken", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      navigate("/dashboard");
+
+    } catch (err) {
+      const message =
+        err?.response?.data?.message || "Google login failed";
+
+      setNotification({
+        open: true,
+        message,
+        severity: "error",
+      });
+    }
+  };
 
   // -------------------- Render --------------------
   return (
@@ -187,18 +216,6 @@ function Signup() {
               helperText={errors.email}
               FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
               InputProps={{ startAdornment: <InputAdornment position="start"><Email /></InputAdornment>, sx: { borderRadius: "15px" } }}
-            />
-
-            {/* Designation */}
-            <TextField
-              fullWidth
-              label="Designation"
-              margin="normal"
-              value={form.designation}
-              onChange={handleChange("designation")}
-              helperText={errors.designation}
-              FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
-              InputProps={{ startAdornment: <InputAdornment position="start"><Work /></InputAdornment>, sx: { borderRadius: "15px" } }}
             />
 
             {/* Password */}
@@ -281,29 +298,21 @@ function Signup() {
             <Box sx={{ flex: 1, height: "1px", backgroundColor: "#ccc" }} />
           </Box>
 
-          <Button
-            variant="outlined"
-            fullWidth
-            // onClick={handleGoogleLogin} 
-            sx={{
-              py: 1.5,
-              borderRadius: "15px",
-              borderColor: theme.palette.primary.main,
-              color: theme.palette.text.primary,
-              textTransform: "none",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 1,
-            }}
-          >
-            <Box
-              component="img"
-              src="/public/google-logo.png"
-              sx={{ width: 40, height: 20, }}
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+               onError={() => console.log("Signup failed")}
+              text="signup_with"   
+              theme="outline"
+              size="large"
+              shape="pill"
+              width="200"
             />
-            Continue with Google
-          </Button>
+          </Box>
+
+
+
+
           <Typography variant="body2" sx={{ mt: 2, textAlign: "center" }} >
             Already have an account?{" "}
             <Link href="/login" underline="hover">
@@ -312,6 +321,22 @@ function Signup() {
           </Typography>
         </CardContent>
       </Card>
+
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={4000}
+        onClose={() => setNotification({ ...notification, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setNotification({ ...notification, open: false })}
+          severity={notification.severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
 
       <TermsDialog open={openTerms} onClose={() => setOpenTerms(false)} />
     </Box>
