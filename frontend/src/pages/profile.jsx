@@ -76,15 +76,6 @@ export default function Profile() {
   const validatePasswordForm = () => {
     const errors = {};
 
-    if (!passwordForm.currentPassword) {
-      errors.currentPassword = "Current password is required";
-    } else if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(passwordForm.currentPassword)
-    ) {
-      errors.currentPassword =
-        "Must include uppercase, lowercase, number & special character";
-    }
-
     if (!passwordForm.newPassword) {
       errors.newPassword = "New password is required";
     } else if (passwordForm.newPassword.length < 8) {
@@ -152,8 +143,7 @@ export default function Profile() {
       const storedUser = JSON.parse(localStorage.getItem("user"));
 
       const payload = {
-        firstName: user.firstName,
-        lastName: user.lastName,
+        name: user.name,
         mobile: user.mobile,
         address: user.address,
         company: user.company,
@@ -300,7 +290,7 @@ export default function Profile() {
           <Typography sx={{ mt: 2, fontWeight: 600 }}>
             Username:{" "}
             <Box component="span" sx={{ color: "primary.main" }}>
-              {user?.firstName} {user?.lastName}
+              {user?.name}
             </Box>
           </Typography>
         </Box>
@@ -327,9 +317,9 @@ export default function Profile() {
                 {/* Row 1 */}
                 <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
                   <TextField
-                    label="First Name"
-                    value={user?.firstName || ""}
-                    onChange={handleChange("firstName")}
+                    label="Name"
+                    value={user?.name || ""}
+                    onChange={handleChange("name")}
                     disabled={!editing}
                     fullWidth
                     InputProps={{
@@ -343,25 +333,6 @@ export default function Profile() {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Last Name"
-                    value={user?.lastName || ""}
-                    onChange={handleChange("lastName")}
-                    disabled={!editing}
-                    fullWidth
-                    InputProps={{
-                      sx: { borderRadius: "15px", width: "135%" },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <PersonIcon color="action" />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-
-                {/* Row 2 */}
-                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
                   <TextField
                     label="Mobile Number"
                     value={user?.mobile || ""}
@@ -378,8 +349,10 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
+
+                {/* Row 2 */}
+                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
+                     <TextField
                     label="Email"
                     value={user?.email || ""}
                     disabled
@@ -394,10 +367,8 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-
-                {/* Row 3 */}
-                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
-                  <TextField
+                <Grid item xs={12} sm={6}>
+                 <TextField
                     label="Address"
                     value={user?.address || ""}
                     onChange={handleChange("address")}
@@ -413,7 +384,9 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+
+                {/* Row 3 */}
+                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
                   <TextField
                     label="Designation"
                     value={user?.designation || ""}
@@ -430,10 +403,8 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-
-                {/* Row 4 */}
-                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
-                  <TextField
+                <Grid item xs={12} sm={6}>
+                   <TextField
                     label="Company"
                     value={user?.company || ""}
                     onChange={handleChange("company")}
@@ -449,8 +420,10 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
+
+                {/* Row 4 */}
+                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
+                    <TextField
                     label="Department"
                     value={user?.department || ""}
                     onChange={handleChange("department")}
@@ -465,9 +438,8 @@ export default function Profile() {
                       ),
                     }}
                   />
-
                 </Grid>
-
+                
                 {/* Save and Cancel Buttons */}
                 {editing && (
                   <>
@@ -512,11 +484,11 @@ export default function Profile() {
                   label="Current Password"
                   type={showPass ? "text" : "password"}
                   fullWidth
-                  sx={{ mb: 2 }}
+                  sx={{ mb: 4 }}
                   value={passwordForm.currentPassword}
                   onChange={handlePasswordChange("currentPassword")}
-                  helperText={passwordErrors.currentPassword}
-                  FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
+                  // helperText={passwordErrors.currentPassword}
+                  // FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
                   InputProps={{
                     sx: { borderRadius: "15px" },
                     startAdornment: (
@@ -539,7 +511,7 @@ export default function Profile() {
                   label="New Password"
                   type={showNewPass ? "text" : "password"}
                   fullWidth
-                  sx={{ mb: 2 }}
+                  sx={{ mb: 4 }}
                   value={passwordForm.newPassword}
                   onChange={handlePasswordChange("newPassword")}
                   helperText={passwordErrors.newPassword}

@@ -11,16 +11,16 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  firstName: string;
+  @Column({ nullable: true, unique: true })
+  googleId?: string;
 
   @Column()
-  lastName: string;
+  name: string;
 
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
   @Column({ nullable: true })
@@ -38,7 +38,7 @@ export class User {
   @Column({ nullable: true })
   department?: string;
 
-  @Column()
+  @Column({ nullable: true })
   designation: string;
 
   @Column({ default: false })

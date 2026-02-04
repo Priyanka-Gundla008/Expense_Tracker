@@ -14,7 +14,7 @@ import { Transform } from 'class-transformer';
 export class CreateUserDto {
 
   @ApiProperty({
-    description: 'First name of the user',
+    description: 'Name of the user',
     minLength: 2,
     maxLength: 30,
   })
@@ -23,25 +23,10 @@ export class CreateUserDto {
   @MinLength(2)
   @MaxLength(30)
   @Matches(/^[A-Za-z]+$/, {
-    message: 'First name can contain only letters',
+    message: 'Name can contain only letters',
   })
   @Transform(({ value }) => value.trim())
-  firstName: string;
-
-  @ApiProperty({
-    description: 'Last name of the user',
-    minLength: 1,
-    maxLength: 30,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(30)
-  @Matches(/^[A-Za-z]+$/, {
-    message: 'Last name can contain only letters',
-  })
-  @Transform(({ value }) => value.trim())
-  lastName: string;
+  name: string;
 
   @ApiProperty({
     description: 'Valid email address',

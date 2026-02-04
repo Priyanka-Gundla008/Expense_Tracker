@@ -17,8 +17,7 @@ export class UsersService {
   // CREATE USER
   async create(createUserDto: CreateUserDto): Promise<User> {
     const {
-      firstName,
-      lastName,
+      name,
       email,
       password,
       profileImage,
@@ -33,8 +32,7 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = this.usersRepository.create({
-      firstName,
-      lastName,
+      name,
       email,
       password: hashedPassword,
       profileImage,
@@ -92,6 +90,27 @@ export class UsersService {
     });
   }
 
+  async findByGoogleId(googleId: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: { googleId },
+    });
+  }
+
+
+  async createGoogleUser(data: any): Promise<User> {
+    const user = this.usersRepository.create({
+      email: data.email,
+      name: data.name,
+      profileImage: data.picture,
+      password: null, // Google users don’t need password
+    });
+
+    return this.usersRepository.save(user);
+  }
+
+
+
+
   async updateUser(
     id: string,
     updateDto: UpdateUserDto,
@@ -115,18 +134,32 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    const match = await bcrypt.compare(dto.currentPassword, user.password);
+    // 👉 Google user setting password first time
+    if (!user.password) {
+      console.log(`Google user ${user.email} is setting password first time`);
+    }
 
-    if (!match) {
-      throw new BadRequestException('Current password is incorrect');
+    // 👉 Normal user → must verify current password
+    if (user.password) {
+      if (!dto.currentPassword) {
+        throw new BadRequestException('Current password is required');
+      }
+
+      const match = await bcrypt.compare(dto.currentPassword, user.password);
+
+      if (!match) {
+        throw new BadRequestException('Current password is incorrect');
+      }
     }
 
     const hashed = await bcrypt.hash(dto.newPassword, 10);
-
     user.password = hashed;
+
     await this.usersRepository.save(user);
 
     return true;
   }
+
+
 
 }

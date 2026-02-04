@@ -10,6 +10,8 @@ import { LoginDto } from './DTO/login.dto';
 import { UsersService } from '../users/users.service';
 import * as crypto from 'crypto';
 import { MailService } from '../mail/mail.service';
+import { OAuth2Client } from 'google-auth-library';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
   ) { }
+  private googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
@@ -41,7 +44,7 @@ export class AuthService {
       accessToken: this.jwtService.sign(payload),
       user: {
         id: user.id,
-        name: user.firstName,
+        name: user.name,
         email: user.email,
         designation: user.designation,
       },
@@ -101,4 +104,46 @@ export class AuthService {
       message: 'Password has been reset successfully',
     };
   }
+
+ async googleLogin(idToken: string) {
+  try {
+    const ticket = await this.googleClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload) throw new UnauthorizedException();
+
+    const { sub, email, name, picture } = payload;
+
+    // ✅ Find user by email
+    let user = await this.usersService.findByEmail(email);
+
+    // ✅ If not exists → create user
+    if (!user) {
+      user = await this.usersService.createGoogleUser({
+        email,
+        name,
+        picture,
+        googleId: sub,
+      });
+    }
+
+    const jwtPayload = {
+      sub: user.id, // UUID from DB
+      email: user.email,
+    };
+
+    return {
+      message: 'Google login successful',
+      token: this.jwtService.sign(jwtPayload),
+      user,
+    };
+  } catch (err) {
+    console.error("Google login error:", err);
+    throw new UnauthorizedException('Invalid Google token');
+  }
+}
+
 }

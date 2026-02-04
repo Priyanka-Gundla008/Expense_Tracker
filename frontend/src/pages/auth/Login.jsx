@@ -17,7 +17,9 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, AccountCircle, Lock } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../services/authService";
+import { login, googleLogin } from "../../services/authService";
+import { GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 
 function Login() {
     const theme = useTheme();
@@ -110,6 +112,42 @@ function Login() {
             });
         }
     };
+
+    // const googleLogin = useGoogleLogin({
+    //     onSuccess: async (tokenResponse) => {
+    //         const idToken = tokenResponse.access_token;
+    //         handleGoogleSuccess({ credential: idToken });
+    //     },
+    // });
+
+
+    const handleGoogleSuccess = async (response) => {
+        const idToken = response.credential;
+
+        try {
+            const res = await googleLogin(idToken);
+
+            const { token, user } = res.data;
+
+
+            console.log("res", res.data)
+
+            localStorage.setItem("accessToken", token);
+            localStorage.setItem("user", JSON.stringify(user));
+
+            navigate("/dashboard");
+
+        } catch (err) {
+            console.error(err);
+            setNotification({
+                open: true,
+                message: "Google login failed",
+                severity: "error",
+            });
+        }
+    };
+
+
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -267,10 +305,10 @@ function Login() {
                             <Box sx={{ flex: 1, height: "1px", backgroundColor: "#ccc" }} />
                         </Box>
 
-                        <Button
+                        {/* <Button
                             variant="outlined"
                             fullWidth
-                            // onClick={handleGoogleLogin}
+                            onClick={() => googleLogin()}
                             sx={{
                                 py: 1.5,
                                 borderRadius: "15px",
@@ -281,20 +319,37 @@ function Login() {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 gap: 1,
-
                             }}
                         >
                             <Box
                                 component="img"
-                                src="/public/google-logo.png"   // change extension if svg
+                                src="/google-logo.png"
                                 alt="Google"
-                                sx={{
-                                    width: 40,
-                                    height: 20,
-                                }}
+                                sx={{ width: 40, height: 20 }}
                             />
                             Continue with Google
-                        </Button>
+                        </Button> */}
+
+
+                        <Box
+                            sx={{
+                                width: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={() => console.log("Login failed")}
+                                text="continue_with"
+                                theme="outline"
+                                size="large"
+                                shape="pill"
+                                width="200" // Google requires fixed width to center properly
+                            />
+                        </Box>
+
+
 
 
                     </form>

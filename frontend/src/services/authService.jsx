@@ -10,7 +10,7 @@ export const login = async (data) => {
     }
 }
 
-export const forgotPassword = async ( email ) => {
+export const forgotPassword = async (email) => {
     try {
         const response = await api.post("auth/forgot-password", email);
         return response
@@ -20,8 +20,8 @@ export const forgotPassword = async ( email ) => {
     }
 }
 
-export const resetPassword = async ( data ) => {
-     try {
+export const resetPassword = async (data) => {
+    try {
         const response = await api.post("auth/reset-password", data);
         return response
     } catch (error) {
@@ -29,3 +29,13 @@ export const resetPassword = async ( data ) => {
         throw error;
     }
 }
+
+export const googleLogin = async (idToken) => {
+    try {
+        const response = await api.post("auth/google-login", { idToken });
+        return response;
+    } catch (error) {
+        console.error("Google login error:", error);
+        throw error;
+    }
+};

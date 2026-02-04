@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './DTO/login.dto';
 import { ForgotPasswordDto } from './DTO/forgot-password.dto';
 import { ResetPasswordDto } from './DTO/reset-password.dto';
+import { GoogleLoginDto } from './DTO/google-login.dto';
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -26,4 +27,11 @@ export class AuthController {
     const { token, newPassword } = dto;
     return this.authService.resetPassword(token, newPassword);
   }
+
+  @Post('google-login')
+  @ApiOperation({ summary: 'Google login' })
+  async googleLogin(@Body() dto: GoogleLoginDto) {
+    return this.authService.googleLogin(dto.idToken);
+  }
+
 }
