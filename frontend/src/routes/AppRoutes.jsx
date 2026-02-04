@@ -8,6 +8,7 @@ import Category from "../pages/CategoryPage";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import PasswordResetConfirmation from "../pages/auth/EmailConfirmation";
 import ResetPassword from "../pages/auth/ResetPassword";
+import Profile from "../pages/profile";
 
 //const isAuthenticated = () => !!localStorage.getItem("token");
 
@@ -32,6 +33,8 @@ function AppRouter() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/expenses" element={<ExpensePage />} />
           <Route path="/category" element={<Category />} />
+          <Route path="/profile" element={<Profile />} />
+
         </Route>
 
         {/* Catch-all */}

@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/user.entity';
 import { CreateUserDto } from './DTO/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './DTO/update-user.dto';
+import { ChangePasswordDto } from './DTO/change-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -12,36 +14,56 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) { }
 
+  // CREATE USER
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const { name, email, password, profileImage, company, department, designation, acceptedTerms } = createUserDto;
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = this.usersRepository.create({
-      name,
+    const {
+      firstName,
+      lastName,
       email,
-      password: hashedPassword,
+      password,
       profileImage,
+      mobile,
+      address,
       company,
       department,
       designation,
-      acceptedTerms
+      acceptedTerms,
+    } = createUserDto;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = this.usersRepository.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      profileImage,
+      mobile,
+      address,
+      company,
+      department,
+      designation,
+      acceptedTerms,
     });
 
     return this.usersRepository.save(user);
   }
 
+  // FIND BY EMAIL
   async findByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { email } });
+    return this.usersRepository.findOne({
+      where: { email },
+    });
   }
 
+  // FIND BY ID
   async findById(id: string): Promise<User | null> {
     return this.usersRepository.findOne({
       where: { id },
     });
   }
 
+  // UPDATE RESET TOKEN
   async updateResetToken(
     userId: string,
     token: string,
@@ -54,10 +76,15 @@ export class UsersService {
   }
 
   async findByResetToken(token: string) {
-    return this.usersRepository.findOne({ where: { resetPasswordToken: token } });
+    return this.usersRepository.findOne({
+      where: { resetPasswordToken: token },
+    });
   }
 
-  async updatePassword(userId: string, hashedPassword: string) {
+  // UPDATE PASSWORD
+  async updatePassword(userId: string, newPassword: string) {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
     return this.usersRepository.update(userId, {
       password: hashedPassword,
       resetPasswordToken: null,
@@ -65,7 +92,41 @@ export class UsersService {
     });
   }
 
+  async updateUser(
+    id: string,
+    updateDto: UpdateUserDto,
+  ): Promise<User | null> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+
+    if (!user) return null;
+
+    Object.assign(user, updateDto);
+
+    return this.usersRepository.save(user);
+  }
+
+  async changePassword(
+    id: string,
+    dto: ChangePasswordDto,
+  ): Promise<boolean> {
+    const user = await this.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const match = await bcrypt.compare(dto.currentPassword, user.password);
+
+    if (!match) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    const hashed = await bcrypt.hash(dto.newPassword, 10);
+
+    user.password = hashed;
+    await this.usersRepository.save(user);
+
+    return true;
+  }
 
 }
-
-

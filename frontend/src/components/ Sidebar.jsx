@@ -39,7 +39,7 @@ function Sidebar() {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         const userData = await getUserById(user.id);
-        setUser(userData);
+        setUser(userData.data);
       } catch (error) {
         console.error("Failed to fetch user data:", error);
       }
@@ -92,7 +92,7 @@ function Sidebar() {
             fontSize: 40,
           }}
         >
-          {!user?.profileImage && user?.name?.charAt(0).toUpperCase()}
+          {!user?.profileImage && user?.firstName?.charAt(0).toUpperCase()}
         </Avatar>
 
         <Typography
@@ -100,7 +100,7 @@ function Sidebar() {
           fontWeight={600}
           color="text.primary"
         >
-          {user ? user.name : "Loading..."}
+          {user?.firstName} {user?.lastName}
         </Typography>
       </Box>
 
