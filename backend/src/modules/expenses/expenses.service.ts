@@ -1,0 +1,474 @@
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Brackets, Repository } from 'typeorm';
+import { Expense } from '../../entities/expense.entity';
+import { CreateExpenseDto } from './DTO/create-expense.dto';
+import { UpdateExpenseDto } from './DTO/update-expense.dto';
+import { Category } from 'src/entities/category.entity';
+
+@Injectable()
+export class ExpensesService {
+  constructor(
+    @InjectRepository(Expense)
+    private expenseRepository: Repository<Expense>,
+
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
+  ) { }
+
+  async createExpense(
+    createExpenseDto: CreateExpenseDto,
+    userId: string,
+  ): Promise<{ message: string; data: any }> {
+
+    const { title, categoryId, amount, date: dateString } = createExpenseDto;
+
+    const trimmedTitle = title.trim();
+
+    // 🔹 Parse date (dd-mm-yyyy)
+    const [day, month, year] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+
+    if (isNaN(date.getTime())) {
+      throw new BadRequestException('Invalid date format');
+    }
+
+    // 🔹 Check duplicate (same title + same date)
+    const existingExpense = await this.expenseRepository
+      .createQueryBuilder('expense')
+      .where('LOWER(expense.title) = LOWER(:title)', { title: trimmedTitle })
+      .andWhere('expense.date = :date', { date })
+      .andWhere('expense.userId = :userId', { userId })
+      .getOne();
+
+    if (existingExpense) {
+      throw new BadRequestException(
+        'Expense with the same title already exists for this date',
+      );
+    }
+
+    // 🔹 Fetch Category
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      throw new BadRequestException('Invalid category');
+    }
+
+    // 🔹 Create Expense
+    const expense = this.expenseRepository.create({
+      title: trimmedTitle,
+      amount,
+      date,
+      category,
+      userId,
+    });
+
+    const saved = await this.expenseRepository.save(expense);
+    const categoryData = {
+      id: saved.category.id,
+      name: saved.category.name,
+      icon: saved.category.icon,
+      createdAt: saved.category.createdAt,
+      updatedAt: saved.category.updatedAt,
+    };
+
+    return {
+      message: 'Expense created successfully',
+      data: {
+        id: saved.id,
+        userId: userId,
+        title: saved.title,
+        category: categoryData,
+        amount: saved.amount,
+        date: this.formatDate(saved.date),
+      },
+    };
+  }
+
+
+
+  private formatDate(date: Date | string): string {
+    const d = new Date(date);
+    const day = ('0' + d.getDate()).slice(-2);
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+
+
+  async getAllExpenses(
+    userId: string,
+  ): Promise<{ message: string; userId: string; data: any[] }> {
+
+    const expenses = await this.expenseRepository.find({
+      where: { userId },
+      relations: ['category'],
+      order: { createdAt: 'DESC' },
+    });
+
+    return {
+      message: 'Expenses fetched successfully',
+      userId,
+      data: expenses.map(exp => ({
+        id: exp.id,
+        title: exp.title,
+        category: exp.category
+          ? {
+            id: exp.category.id,
+            name: exp.category.name,
+            icon: exp.category.icon,
+            createdAt: exp.category.createdAt,
+            updatedAt: exp.category.updatedAt,
+          }
+          : null,
+        amount: exp.amount,
+        date: this.formatDate(exp.date),
+      })),
+    };
+  }
+
+
+  async getExpenseById(id: string, userId: string): Promise<{ message: string; data: any }> {
+    const expense = await this.expenseRepository.findOne({
+      where: { id, userId },
+    });
+
+
+    if (!expense) {
+      throw new NotFoundException(`Expense with ID ${id} of user ${userId} not found`);
+    }
+
+    const categoryData = {
+      id: expense.category.id,
+      name: expense.category.name,
+      icon: expense.category.icon,
+      createdAt: expense.category.createdAt,
+      updatedAt: expense.category.updatedAt,
+    };
+
+    return {
+      message: 'Expense fetched successfully',
+      data: {
+        id: expense.id,
+        userId: userId,
+        title: expense.title,
+        category: categoryData,
+        amount: expense.amount,
+        date: this.formatDate(expense.date),
+      },
+    };
+  }
+
+  async updateExpense(id: string, updateExpenseDto: UpdateExpenseDto, userId: string): Promise<{ message: string; data: any }> {
+    const expense = await this.expenseRepository.findOne({
+      where: { id, userId },
+    });
+
+    if (!expense) {
+      throw new NotFoundException(`Expense with ID ${id} of user ${userId} not found`);
+    }
+
+    if (updateExpenseDto.date) {
+      const [day, month, year] = updateExpenseDto.date.split('-').map(Number);
+      const dateObj = new Date(year, month - 1, day);
+      if (isNaN(dateObj.getTime())) throw new BadRequestException('Invalid date');
+      expense.date = dateObj;
+    }
+
+    Object.assign(expense, {
+      title: updateExpenseDto.title ?? expense.title,
+      category: updateExpenseDto.category ?? expense.category,
+      amount: updateExpenseDto.amount ?? expense.amount,
+    });
+
+    const saved = await this.expenseRepository.save(expense);
+    const categoryData = {
+      id: saved.category.id,
+      name: saved.category.name,
+      icon: saved.category.icon,
+      createdAt: saved.category.createdAt,
+      updatedAt: saved.category.updatedAt,
+    };
+
+
+    return {
+      message: 'Expense updated successfully',
+      data: {
+        id: saved.id,
+        userId: userId,
+        title: saved.title,
+        category: categoryData,
+        amount: saved.amount,
+        date: this.formatDate(saved.date),
+      },
+    };
+  }
+
+  async deleteExpense(id: string, userId: string): Promise<{ message: string }> {
+    const expense = await this.expenseRepository.findOne({
+      where: { id, userId },
+    });
+
+    if (!expense) throw new NotFoundException(`Expense with ID ${id} of user ${userId} not found`);
+
+    await this.expenseRepository.remove(expense);
+    return {
+      message: 'Expense deleted successfully'
+    };
+  }
+
+  async getCurrentMonthTotalExpense(userId: string,): Promise<{ message: string; data: any }> {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0-based
+
+    const startDate = new Date(year, month, 1);
+    const endDate = new Date(year, month + 1, 1);
+
+    const result = await this.expenseRepository
+      .createQueryBuilder('expense')
+      .select('COALESCE(SUM(expense.amount), 0)', 'total')
+      .where('expense.userId = :userId', { userId })
+      .andWhere('expense.date >= :startDate', { startDate })
+      .andWhere('expense.date < :endDate', { endDate })
+      .getRawOne();
+
+
+    return {
+      message: 'Total expense fetched successfully',
+      data: {
+        userId: userId,
+        year,
+        month: month + 1,
+        totalExpense: Number(result.total),
+      },
+    };
+  }
+
+  async searchExpenses(
+    year?: number,
+    month?: number,
+    searchText?: string,
+  ): Promise<{ message: string; data: any[] }> {
+    const now = new Date();
+
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    // Case: Only month → use current year
+    if (!year && month) {
+      year = now.getFullYear();
+    }
+
+    // At least one filter must exist
+    if (!year && !month && !searchText) {
+      throw new BadRequestException('At least one filter (year, month, title, category) must be provided');
+    }
+
+    // Build startDate and endDate if year or month is provided
+    let startDate: Date | undefined;
+    let endDate: Date | undefined;
+
+    if (year) {
+      if (month) {
+        startDate = new Date(year, month - 1, 1);
+        endDate = new Date(year, month, 1);
+      } else {
+        startDate = new Date(year, 0, 1);
+        endDate = new Date(year + 1, 0, 1);
+      }
+    }
+
+    // Build query
+    // const queryBuilder = this.expenseRepository.createQueryBuilder('expense');
+    const queryBuilder = this.expenseRepository
+      .createQueryBuilder('expense')
+      .leftJoinAndSelect('expense.category', 'category');
+
+
+    if (startDate && endDate) {
+      queryBuilder.andWhere('expense.date >= :startDate AND expense.date < :endDate', { startDate, endDate });
+    }
+
+    if (searchText) {
+      queryBuilder.andWhere(
+        new Brackets(qb => {
+          qb.where('LOWER(expense.title) ILIKE LOWER(:searchText)')
+            .orWhere('LOWER(category.name) ILIKE LOWER(:searchText)');
+        }),
+        { searchText: `%${searchText}%` },
+      );
+    }
+
+
+    queryBuilder.orderBy('expense.date', 'DESC');
+
+    const expenses = await queryBuilder.getMany();
+
+    // Handle no results
+    if (!expenses.length) {
+      let message = 'No expenses found';
+
+      if (year && month && searchText)
+        message = `No expenses found for "${searchText}" in ${months[month - 1]} ${year}`;
+      else if (year && month)
+        message = `No expenses found for ${months[month - 1]} ${year}`;
+      else if (year && searchText)
+        message = `No expenses found for "${searchText}" in year ${year}`;
+      else if (month && searchText)
+        message = `No expenses found for "${searchText}" in ${months[month - 1]} ${now.getFullYear()}`;
+      else if (year)
+        message = `No expenses found for year ${year}`;
+      else if (month)
+        message = `No expenses found for ${months[month - 1]} ${year || now.getFullYear()}`;
+      else if (searchText)
+        message = `No expenses found for title "${searchText}"`;
+      else if (year && month)
+        message = `No expenses found for ${months[month - 1]} ${year}`;
+      else if (year && searchText)
+        message = `No expenses found for "${searchText}" in year ${year}`;
+      else if (month && searchText)
+        message = `No expenses found for "${searchText}" in ${months[month - 1]} ${now.getFullYear()}`;
+      else if (year)
+        message = `No expenses found for year ${year}`;
+      else if (month)
+        message = `No expenses found for ${months[month - 1]} ${year || now.getFullYear()}`;
+      else if (year)
+        message = `No expenses found for year ${year}`;
+      else if (month)
+        message = `No expenses found for ${months[month - 1]} ${year || now.getFullYear()}`;
+      else if (searchText)
+        message = `No expenses found for title "${searchText}"`;
+
+      return { message, data: [] };
+    }
+
+    // Format results
+    const data = expenses.map(exp => ({
+      id: exp.id,
+      title: exp.title,
+      category: exp.category,
+      amount: exp.amount,
+      date: this.formatDate(exp.date),
+    }));
+
+    return {
+      message: 'Expenses fetched successfully',
+      data,
+    };
+  }
+
+  async getCategorySummary(userId: string, year: number, month?: number) {
+    let startDate: Date;
+    let endDate: Date;
+    const now = new Date();
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    if (month) {
+      startDate = new Date(year, month - 1, 1);
+      endDate = new Date(year, month, 1);
+    } else {
+      startDate = new Date(year, 0, 1);
+      endDate = new Date(year + 1, 0, 1);
+    }
+
+    const result = await this.expenseRepository
+      .createQueryBuilder('expense')
+      .leftJoin('expense.category', 'category')
+      .select('category.id', 'category_id')
+      .addSelect('category.name', 'category_name')
+      .addSelect('SUM(expense.amount)', 'amount')
+      .where('expense.userId = :userId', { userId }) // 👈 REQUIRED
+      .andWhere('expense.date >= :startDate', { startDate })
+      .andWhere('expense.date < :endDate', { endDate })
+      .groupBy('category.id')
+      .addGroupBy('category.name')
+      .getRawMany();
+
+
+
+
+    const formatted = result.map(item => ({
+      category: {
+        id: item.category_id,
+        name: item.category_name,
+      },
+      amount: Number(item.amount),
+    }));
+
+    if (!formatted.length) {
+      let message = 'No expenses found';
+
+      if (year && month)
+        message = `No expenses found for ${months[month - 1]}, ${year}`;
+      else if (year)
+        message = `No expenses found for year ${year}`;
+      else if (month)
+        message = `No expenses found for ${months[month - 1]}, ${year || now.getFullYear()}`;
+      return { message, data: [] };
+    }
+
+    return {
+      message: 'Category-wise expense summary fetched successfully',
+      userId: userId,
+      data: formatted, // <-- only the array, no nested message
+    };
+
+  }
+
+  async getMonthlyExpenseTrend(userId: string, year: number) {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+
+    const startDate = new Date(year, 0, 1);
+    const endDate = new Date(year + 1, 0, 1);
+
+    const result = await this.expenseRepository
+      .createQueryBuilder('expense')
+      .select('EXTRACT(MONTH FROM expense.date)', 'month')
+      .addSelect('SUM(expense.amount)', 'expense')
+      .where('expense.userId = :userId', { userId }) // first condition
+      .andWhere('expense.date >= :startDate', { startDate })
+      .andWhere('expense.date < :endDate', { endDate })
+      .groupBy('month')
+      .orderBy('month', 'ASC')
+      .getRawMany();
+
+
+    // Map DB result → 12 months
+    const data = months.map((monthName, index) => {
+      const found = result.find(
+        r => Number(r.month) === index + 1,
+      );
+
+      return {
+        month: monthName,
+        expense: found ? Number(found.expense) : 0,
+      };
+    });
+
+    const hasData = data.some(d => d.expense > 0);
+
+    return {
+      message: hasData
+        ? 'Monthly expense trend fetched successfully'
+        : `No expenses found for year ${year}`,
+      userId: userId,
+      data,
+    };
+  }
+
+
+
+
+
+}
