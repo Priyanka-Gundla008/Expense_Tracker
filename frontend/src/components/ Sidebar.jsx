@@ -11,6 +11,7 @@ import {
   Avatar,
   Divider,
   useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ReceiptIcon from "@mui/icons-material/Receipt";
@@ -18,7 +19,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUserById } from "../services/userService";
 
-const drawerWidth = 300;
+const drawerWidth = 280;
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
@@ -26,54 +27,37 @@ const menuItems = [
   { text: "Category", icon: <CategoryIcon />, path: "/category" },
 ];
 
-function Sidebar() {
+function Sidebar({ mobileOpen, handleDrawerToggle }) {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const location = useLocation();
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Fetch user data on mount (example userId used here)
     const fetchUserData = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         const userData = await getUserById(user.id);
         setUser(userData.data);
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
+        console.error(error);
       }
     };
 
     fetchUserData();
   }, []);
 
-  return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          boxSizing: "border-box",
-          backgroundColor: theme.palette.background.primary,
-          borderRight: `1px solid ${theme.palette.divider}`,
-        },
-      }}
-    >
+  const drawerContent = (
+    <>
       <Box sx={{ p: 2 }}>
-        <Typography
-          variant="h5"
-          fontWeight={800}
-          color="primary"
-          textAlign="center"
-        >
+        <Typography variant="h5" fontWeight={800} color="primary" textAlign="center">
           Expense Tracker
         </Typography>
       </Box>
 
-      {/* User Profile */}
       <Box
         sx={{
           p: 3,
@@ -86,30 +70,20 @@ function Sidebar() {
         <Avatar
           src={user?.profileImage || undefined}
           sx={{
-            width: 100,
-            height: 100,
+            width: 90,
+            height: 90,
             bgcolor: theme.palette.primary.main,
-            fontSize: 40,
+            fontSize: 36,
           }}
         >
           {!user?.profileImage && user?.name?.charAt(0).toUpperCase()}
         </Avatar>
 
-        <Typography
-          variant="subtitle1"
-          fontWeight={600}
-          color="text.primary"
-        >
-          {user?.name}
-        </Typography>
+        <Typography fontWeight={600}>{user?.name}</Typography>
       </Box>
 
       <Divider />
 
-      {/* App Name */}
-
-
-      {/* Menu Items */}
       <List>
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
@@ -125,9 +99,6 @@ function Sidebar() {
                   backgroundColor: isActive
                     ? `${theme.palette.primary.main}20`
                     : "transparent",
-                  "&:hover": {
-                    backgroundColor: `${theme.palette.primary.main}30`,
-                  },
                 }}
               >
                 <ListItemIcon
@@ -135,7 +106,6 @@ function Sidebar() {
                     color: isActive
                       ? theme.palette.primary.main
                       : theme.palette.text.secondary,
-                    minWidth: 40,
                   }}
                 >
                   {item.icon}
@@ -145,7 +115,6 @@ function Sidebar() {
                   primary={item.text}
                   primaryTypographyProps={{
                     fontWeight: isActive ? 600 : 400,
-                    color: "text.primary",
                   }}
                 />
               </ListItemButton>
@@ -153,7 +122,42 @@ function Sidebar() {
           );
         })}
       </List>
-    </Drawer>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile Drawer */}
+      {isMobile && (
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          sx={{
+            "& .MuiDrawer-paper": { width: drawerWidth },
+          }}
+        >
+          {drawerContent}
+        </Drawer>
+      )}
+
+      {/* Desktop Drawer */}
+      {!isMobile && (
+        <Drawer
+          variant="permanent"
+          sx={{
+            width: drawerWidth,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+            },
+          }}
+          open
+        >
+          {drawerContent}
+        </Drawer>
+      )}
+    </>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Box,
     Card,
@@ -6,10 +6,14 @@ import {
     Avatar,
     Typography,
     TablePagination,
-    useTheme
+    useTheme,
+    useMediaQuery
 } from "@mui/material";
+
 import { deleteCategory } from "../../services/categoryService";
 import CategoryForm from "./CategoryForm";
+import DeleteNotification from "../DeleteNotification";
+
 import AddIcon from "@mui/icons-material/Add";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import ReceiptIcon from "@mui/icons-material/Receipt";
@@ -24,10 +28,12 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import DeleteNotification from "../DeleteNotification";
 
 function CategoryList({ categoriesList = [], getAPI }) {
     const theme = useTheme();
+
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
     const [openForm, setOpenForm] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -35,9 +41,7 @@ function CategoryList({ categoriesList = [], getAPI }) {
     const [deleteCategoryId, setDeleteCategoryId] = useState(null);
 
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(9);
-
-
+    const [rowsPerPage, setRowsPerPage] = useState(isSmallScreen ? 3 : 9);
     const categoryIcons = {
         Food: <RestaurantIcon />,
         Bills: <ReceiptIcon />,
@@ -50,18 +54,31 @@ function CategoryList({ categoriesList = [], getAPI }) {
         Pets: <PetsIcon />,
         Transport: <DirectionsCarIcon />,
         Mobile: <PhoneAndroidIcon />,
-        Subscriptions: <SubscriptionsIcon />,
+        Subscriptions: <SubscriptionsIcon />
     };
 
     const totalItems = categoriesList.length;
+
+    const rowsPerPageOptions = isSmallScreen ? [] : [9, 14, 24];
+
     const paginatedCategories = categoriesList.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
     );
 
+    useEffect(() => {
+        setRowsPerPage(isSmallScreen ? 3 : 9);
+        setPage(0);
+    }, [isSmallScreen]);
+
+    // Show only 3 categories on small screens
+    // const displayCategories = isSmallScreen
+    //     ? paginatedCategories.slice(0, 3)
+    //     : paginatedCategories;
+
     const handleDelete = (id) => {
         setDeleteCategoryId(id);
-        setOpenConfirmDelete(true);       
+        setOpenConfirmDelete(true);
     };
 
     const confirmDelete = async () => {
@@ -69,7 +86,7 @@ function CategoryList({ categoriesList = [], getAPI }) {
             await deleteCategory(deleteCategoryId);
             await getAPI();
         } catch (error) {
-            console.error("Failed to delete expense", error);
+            console.error("Failed to delete category", error);
         } finally {
             setOpenConfirmDelete(false);
             setDeleteCategoryId(null);
@@ -83,22 +100,32 @@ function CategoryList({ categoriesList = [], getAPI }) {
 
     return (
         <>
+            {/* CATEGORY GRID */}
+
             <Box
                 sx={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(5, 1fr)",
-                    gap: 5,
-                    px: 3,
+                    gridTemplateColumns: {
+                        xs: "repeat(1, minmax(260px, 280px))",
+                        sm: "repeat(2, minmax(310px, 1fr))",
+                        md: "repeat(3, minmax(280px, 1fr))",
+                        lg: "repeat(4, minmax(280px, 1fr))",
+                        xl: "repeat(5, minmax(280px, 1fr))"
+                    },
+                    justifyContent: "center",
+                    gap: { xs: 2, sm: 3, md: 4 },
+                    px: { xs: 2, sm: 3, md: 4 }
                 }}
             >
+                {/* ADD CATEGORY CARD */}
+
                 <Box
                     onClick={() => {
                         setSelectedCategory(null);
                         setOpenForm(true);
                     }}
                     sx={{
-                        p: 3,
-                        height: "100%",
+                        p: { xs: 2, sm: 3 },
                         borderRadius: "20px",
                         textAlign: "center",
                         border: "2px dashed",
@@ -111,29 +138,32 @@ function CategoryList({ categoriesList = [], getAPI }) {
                         justifyContent: "center",
                         transition: "0.3s",
                         "&:hover": {
-                            backgroundColor: theme.palette.action.hover,
-                        },
+                            backgroundColor: theme.palette.action.hover
+                        }
                     }}
                 >
                     <Avatar
                         sx={{
                             mb: 2,
-                            width: 56,
-                            height: 56,
+                            width: { xs: 40, sm: 48, md: 56 },
+                            height: { xs: 40, sm: 48, md: 56 },
                             bgcolor: "transparent",
                             border: "2px dashed",
                             borderColor: theme.palette.primary.main,
-                            color: theme.palette.primary.main,
+                            color: theme.palette.primary.main
                         }}
                     >
                         <AddIcon />
                     </Avatar>
 
                     <Typography fontWeight={700}>Add Category</Typography>
+
                     <Typography variant="body2">
                         Create a new category
                     </Typography>
                 </Box>
+
+                {/* CATEGORY CARDS */}
 
                 {paginatedCategories.map((cat, index) => (
                     <Card
@@ -143,6 +173,10 @@ function CategoryList({ categoriesList = [], getAPI }) {
                             boxShadow: 5,
                             transition: "0.3s",
                             cursor: "pointer",
+                            "&:hover": {
+                                transform: "translateY(-4px)",
+                                boxShadow: 8
+                            }
                         }}
                         onClick={() => {
                             setSelectedCategory(cat);
@@ -153,8 +187,7 @@ function CategoryList({ categoriesList = [], getAPI }) {
                             <Box
                                 sx={{
                                     position: "relative",
-                                    p: 3,
-                                    height: "100%",
+                                    p: { xs: 2, sm: 3 },
                                     borderRadius: "20px",
                                     textAlign: "center",
                                     background: "#fff",
@@ -163,7 +196,6 @@ function CategoryList({ categoriesList = [], getAPI }) {
                                     flexDirection: "column",
                                     justifyContent: "center",
                                     alignItems: "center",
-
                                     "&::before": {
                                         content: '""',
                                         position: "absolute",
@@ -175,10 +207,12 @@ function CategoryList({ categoriesList = [], getAPI }) {
                                         WebkitMask:
                                             "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                                         WebkitMaskComposite: "xor",
-                                        maskComposite: "exclude",
-                                    },
+                                        maskComposite: "exclude"
+                                    }
                                 }}
                             >
+                                {/* DELETE ICON */}
+
                                 <DeleteOutlineIcon
                                     sx={{
                                         position: "absolute",
@@ -186,7 +220,7 @@ function CategoryList({ categoriesList = [], getAPI }) {
                                         right: 8,
                                         color: "error.main",
                                         cursor: "pointer",
-                                        zIndex: 10,
+                                        zIndex: 10
                                     }}
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -194,25 +228,36 @@ function CategoryList({ categoriesList = [], getAPI }) {
                                     }}
                                 />
 
+                                {/* ICON */}
+
                                 <Avatar
                                     sx={{
                                         mb: 2,
-                                        width: 56,
-                                        height: 56,
+                                        width: { xs: 40, sm: 48, md: 56 },
+                                        height: { xs: 40, sm: 48, md: 56 },
                                         bgcolor: "#e8f5e9",
-                                        color: "#2e7d32",
+                                        color: "#2e7d32"
                                     }}
                                 >
                                     {categoryIcons[cat.icon]}
                                 </Avatar>
 
-                                <Typography fontWeight={700} variant="h6">
+                                {/* NAME */}
+
+                                <Typography
+                                    fontWeight={700}
+                                    variant="h6"
+                                    sx={{ fontSize: { xs: 16, sm: 18, md: 20 } }}
+                                >
                                     {cat.name}
                                 </Typography>
+
+                                {/* DESCRIPTION */}
 
                                 <Typography
                                     variant="body2"
                                     color="text.secondary"
+                                    sx={{ textAlign: "center" }}
                                 >
                                     Manage {cat.name.toLowerCase()} expenses
                                 </Typography>
@@ -222,14 +267,21 @@ function CategoryList({ categoriesList = [], getAPI }) {
                 ))}
             </Box>
 
+            {/* PAGINATION */}
+
             {totalItems > 0 && (
                 <Box
                     sx={{
+                        width: "100%",
                         display: "flex",
-                        justifyContent: "flex-end",
-                        mt: 5,
-                        px: 3,
-                        pl: 135,
+                        justifyContent: {
+                            xs: "center",
+                            sm: "center",
+                            md: "flex-end",
+                            lg: "flex-end"
+                        },
+                        mt: { xs: 3, sm: 4, md: 5 },
+                        px: { xs: 2, sm: 3, md: 4 }
                     }}
                 >
                     <TablePagination
@@ -240,23 +292,25 @@ function CategoryList({ categoriesList = [], getAPI }) {
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={(e) => {
                             setRowsPerPage(parseInt(e.target.value, 10));
-                            setPage(0); 
+                            setPage(0);
                         }}
-                        rowsPerPageOptions={[9, 14, 24]}
+                        rowsPerPageOptions={rowsPerPageOptions}
                     />
                 </Box>
             )}
+
+            {/* CATEGORY FORM */}
 
             <CategoryForm
                 open={openForm}
                 onClose={() => setOpenForm(false)}
                 category={selectedCategory}
-                categoryId={selectedCategory?.id}   
+                categoryId={selectedCategory?.id}
                 onSuccess={getAPI}
                 usedIcons={categoriesList.map((c) => c.icon)}
             />
 
-
+            {/* DELETE CONFIRMATION */}
 
             <DeleteNotification
                 open={openConfirmDelete}

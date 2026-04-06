@@ -436,7 +436,7 @@ export class ExpensesService {
       .createQueryBuilder('expense')
       .select('EXTRACT(MONTH FROM expense.date)', 'month')
       .addSelect('SUM(expense.amount)', 'expense')
-      .where('expense.userId = :userId', { userId }) // first condition
+      .where('expense.userId = :userId', { userId })
       .andWhere('expense.date >= :startDate', { startDate })
       .andWhere('expense.date < :endDate', { endDate })
       .groupBy('month')

@@ -5,69 +5,50 @@ import {
   IconButton,
   Avatar,
   Popover,
-  Badge,
   Button,
-  Switch,
   useTheme,
-  List,
-  ListItem,
-  ListItemText
+  useMediaQuery
 } from "@mui/material";
-import { Notifications } from "@mui/icons-material";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import { useThemeMode } from "../context/ThemeContext";
+import MenuIcon from "@mui/icons-material/Menu";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import { useNavigate } from "react-router-dom";
 import { getUserById } from "../services/userService";
 
-export default function Header() {
+export default function Header({ toggleSidebar }) {
   const theme = useTheme();
-  const navigator = useNavigate();
-  const { darkMode, toggleDarkMode } = useThemeMode();
+  const navigate = useNavigate();
+
+  // Breakpoints
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
   const [user, setUser] = useState(null);
-  // Avatar popover state
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  // Notifications popover state
-  const [notifAnchorEl, setNotifAnchorEl] = useState(null);
-  const notifOpen = Boolean(notifAnchorEl);
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  // Sample notifications
-  const notifications = [
-    "Over-budget alert: Food category",
-    "Payment due: Electricity Bill",
-    "Bill reminder: Internet subscription"
-  ];
-
-  const handleAvatarClick = (event) => setAnchorEl(event.currentTarget);
-  const handlePopoverClose = () => setAnchorEl(null);
-
-  const handleNotifClick = (event) => setNotifAnchorEl(event.currentTarget);
-  const handleNotifClose = () => setNotifAnchorEl(null);
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleMenuAction = (action) => {
-    handlePopoverClose(); // close popover first
+    handlePopoverClose();
 
-    if (action === "viewProfile") {
-      navigator("/profile?mode=view");
-    }
-
-    if (action === "editProfile") {
-      navigator("/profile?mode=edit");
-    }
+    if (action === "viewProfile") navigate("/profile?mode=view");
+    if (action === "editProfile") navigate("/profile?mode=edit");
   };
 
   const logout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
-    navigator("/login");
+    navigate("/login");
   };
 
-
   useEffect(() => {
-    // Fetch user data on mount (example userId used here)
     const fetchUserData = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -85,59 +66,81 @@ export default function Header() {
     <Box
       component="header"
       sx={{
+        width: "100%",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "1rem",
+        px: { xs: 1.5, sm: 2, md: 3, lg: 4 },
+        py: { xs: 1, sm: 1.2, md: 1.5 },
         backgroundColor: theme.palette.background.primary,
         color: theme.palette.text.primary,
-        boxShadow: 1,
+        boxShadow: 1
       }}
     >
-      {/* Left side */}
-      <Typography
-        variant="h6"
-        fontWeight={600}
-        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+      {/* LEFT SECTION */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: { xs: 1, sm: 2 },
+          flex: 1,
+          minWidth: 0
+        }}
       >
-       Welcome, {user?.name}<HandshakeIcon sx={{ color: theme.palette.primary.main }} />
-      </Typography>
+        {/* Sidebar menu button (mobile + tablet) */}
+        {(isMobile || isTablet) && (
+          <IconButton onClick={toggleSidebar}>
+            <MenuIcon />
+          </IconButton>
+        )}
 
-      {/* Right side */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-
-        <Popover
-          open={notifOpen}
-          anchorEl={notifAnchorEl}
-          onClose={handleNotifClose}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          transformOrigin={{ vertical: "top", horizontal: "right" }}
+        {/* Welcome Text */}
+        <Typography
+          variant={isMobile ? "subtitle2" : "h6"}
+          fontWeight={600}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap"
+          }}
         >
-          <Box sx={{ p: 2, minWidth: 250 }}>
-            <Typography fontWeight={600}>Notifications</Typography>
-            <List>
-              {notifications.map((notif, idx) => (
-                <ListItem key={idx}>
-                  <ListItemText primary={notif} />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        </Popover>
+          {isMobile ? "Welcome" : `Welcome, ${user?.name}`}
 
-        {/* User Avatar */}
+          <HandshakeIcon
+            sx={{
+              fontSize: { xs: 18, sm: 20, md: 22 },
+              color: theme.palette.primary.main
+            }}
+          />
+        </Typography>
+      </Box>
+
+      {/* RIGHT SECTION */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: { xs: 1, sm: 2 }
+        }}
+      >
+        {/* Avatar */}
         <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>
           <Avatar
             src={user?.profileImage || undefined}
             sx={{
-              bgcolor: theme.palette.primary.main,
+              width: { xs: 32, sm: 36, md: 40 },
+              height: { xs: 32, sm: 36, md: 40 },
+              bgcolor: theme.palette.primary.main
             }}
           >
-            {!user?.profileImage && user?.name?.charAt(0).toUpperCase()}
+            {!user?.profileImage && user?.name?.charAt(0)?.toUpperCase()}
           </Avatar>
         </IconButton>
 
-        {/* Avatar Popover */}
+        {/* Popover */}
         <Popover
           open={open}
           anchorEl={anchorEl}
@@ -145,25 +148,36 @@ export default function Header() {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
         >
-          <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2, minWidth: 200 }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography fontWeight={600}>{user?.name} </Typography>
-            </Box>
+          <Box
+            sx={{
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              gap: 1.5,
+              minWidth: { xs: 160, sm: 200 }
+            }}
+          >
+            <Typography fontWeight={600}>{user?.name}</Typography>
 
-            <Button variant="outlined" onClick={() => handleMenuAction("viewProfile")}>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => handleMenuAction("viewProfile")}
+            >
               View Profile
             </Button>
 
-            <Button variant="outlined" onClick={() => handleMenuAction("editProfile")}>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => handleMenuAction("editProfile")}
+            >
               Edit Profile
             </Button>
 
-            <Button color="error" variant="outlined" onClick={logout}>Logout</Button>
-
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <Typography>Dark Mode</Typography>
-              <Switch checked={darkMode} onChange={toggleDarkMode} />
-            </Box>
+            <Button size="small" color="error" variant="outlined" onClick={logout}>
+              Logout
+            </Button>
           </Box>
         </Popover>
       </Box>
