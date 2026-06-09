@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Income } from 'src/entities/income.entity';
@@ -15,11 +15,10 @@ export class IncomeService {
     private readonly expenseRepository: Repository<Expense>,
   ) { }
 
-  async upsertIncome(dto: UpsertIncomeDto) {
+  async upsertIncome(dto: UpsertIncomeDto, userId: string) {
     const { year, month, income } = dto;
-
     const existing = await this.incomeRepository.findOne({
-      where: { year, month },
+      where: { year, month, userId }, // ✅ important
     });
 
     const MONTHS = [
@@ -49,7 +48,10 @@ export class IncomeService {
       };
     }
 
-    const newIncome = this.incomeRepository.create(dto);
+    const newIncome = this.incomeRepository.create({
+      ...dto,
+      userId, // ✅ attach user
+    });
     await this.incomeRepository.save(newIncome);
 
     return {
@@ -58,22 +60,30 @@ export class IncomeService {
     };
   }
 
-  async getIncome(filter?: { year?: number; month?: number }) {
-    const query = this.incomeRepository.createQueryBuilder('income');
+  async getIncome(userId: string, filter?: { year?: number; month?: number }) {
+    if (!userId) {
+      throw new BadRequestException('User not authenticated');
+    }
 
-    if (filter?.year) query.andWhere('income.year = :year', { year: filter.year });
-    if (filter?.month) query.andWhere('income.month = :month', { month: filter.month });
+    const query = this.incomeRepository
+      .createQueryBuilder('income')
+      .where('income.userId = :userId', { userId });
+
+    if (filter?.year)
+      query.andWhere('income.year = :year', { year: filter.year });
+
+    if (filter?.month)
+      query.andWhere('income.month = :month', { month: filter.month });
 
     const incomeData = await query.getMany();
 
-    // Calculate expenses and balance for each income entry
     const results = await Promise.all(
       incomeData.map(async (inc) => {
-        // Total expenses for this year/month
         const totalExpenses = await this.expenseRepository
           .createQueryBuilder('expense')
           .select('SUM(expense.amount)', 'sum')
-          .where('EXTRACT(YEAR FROM expense.date) = :year', { year: inc.year })
+          .where('expense.userId = :userId', { userId })
+          .andWhere('EXTRACT(YEAR FROM expense.date) = :year', { year: inc.year })
           .andWhere('EXTRACT(MONTH FROM expense.date) = :month', { month: inc.month })
           .getRawOne();
 
@@ -90,4 +100,5 @@ export class IncomeService {
 
     return results;
   }
+
 }

@@ -30,6 +30,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import { getUserById, updateUser, changePassword } from "../services/userService";
 
+
 export default function Profile() {
   const theme = useTheme();
   const location = useLocation();
@@ -229,57 +230,156 @@ export default function Profile() {
 
 
   return (
-    <Box
-      sx={{
-        minHeight: "90vh",
-        p: 3,
-        background: theme.palette.background.default,
-      }}
-    >
+   <Box
+  sx={{
+    minHeight: "90vh",
+    p: {
+      xs: 2,
+      sm: 3,
+      md: 4,
+      lg: 4,
+      xl: 5,
+    },
+    background: theme.palette.background.default,
+  }}
+>
       {/* Title */}
       <Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
         My Profile
       </Typography>
 
       {/* Tabs */}
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 10, ml: editing ? -37 : -57, }}>
-        <Tabs
-          value={tab}
-          onChange={(e, v) => setTab(v)}
-          sx={{
-            "& .MuiTabs-indicator": { backgroundColor: theme.palette.primary.main },
-          }}
-        >
-          {/* Always show Personal Details tab */}
-          <Tab label="Personal Details" />
-
-          {/* Show Change Password only in edit mode */}
-          {editing && <Tab label="Change Password" />}
-        </Tabs>
-      </Box>
+     <Box
+  sx={{
+    display: "flex",
+    justifyContent: "center",
+    mb: {
+      xs: 3,
+      sm: 4,
+      md: 5,
+      lg: 6,
+      xl: 5,
+    },
+  }}
+>
+  <Tabs
+    value={tab}
+    onChange={(e, v) => setTab(v)}
+    variant="scrollable"
+    scrollButtons="auto"
+    sx={{
+      "& .MuiTabs-indicator": {
+        backgroundColor: theme.palette.primary.main,
+      },
+    }}
+  >
+    <Tab label="Personal Details" />
+    {editing && <Tab label="Change Password" />}
+  </Tabs>
+</Box>
 
 
       {/* Main Card */}
-      <Box sx={{ display: "flex", gap: 4, alignItems: "flex-start" }}>
-        {/* LEFT AVATAR PANEL */}
-        <Box sx={{ width: 320, textAlign: "center", position: "sticky", top: 200, mt: 3 }}>
-          <Box sx={{ position: "relative", display: "inline-block", }} >
-            <Avatar src={profileImagePreview || user.profileImage} sx={{ width: 220, height: 220, fontSize: 48 }}>
-              {!profileImagePreview && user.profileImage}
-            </Avatar>
+<Box
+  sx={{
+    display: "flex",
+    flexDirection: {
+      xs: "column",
+      sm: "column",
+      md: "column",
+      lg: "row",
+      xl: "row",
+    },
+    gap: {
+      xs: 3,
+      sm: 4,
+      md: 4,
+      lg: 5,
+      xl: 6,
+    },
+    alignItems: {
+      xs: "center",
+      sm: "center",
+      md: "center",
+      lg: "flex-start",
+      xl: "flex-start",
+    },
+  }}
+>        {/* LEFT AVATAR PANEL */}
+<Box
+  sx={{
+    width: {
+      xs: "100%",
+      sm: "100%",
+      md: "100%",
+      lg: 280,
+      xl: 320,
+    },
+    textAlign: "center",
+    position: {
+      xs: "static",
+      sm: "static",
+      md: "static",
+      lg: "sticky",
+      xl: "sticky",
+    },
+    top: 120,
+    mt: {
+      xs: 0,
+      sm: 1,
+      md: 2,
+      lg: 3,
+      xl: 3,
+    },
+  }}
+>          <Box sx={{ position: "relative", display: "inline-block", }} >
+<Avatar
+  src={profileImagePreview || user.profileImage}
+  sx={{
+    width: {
+      xs: 120,
+      sm: 150,
+      md: 180,
+      lg: 220,
+      xl: 240,
+    },
+    height: {
+      xs: 120,
+      sm: 150,
+      md: 180,
+      lg: 220,
+      xl: 240,
+    },
+    fontSize: {
+      xs: 30,
+      sm: 36,
+      md: 40,
+      lg: 48,
+      xl: 52,
+    },
+    mx: "auto",
+  }}
+>
+  {!profileImagePreview && user.profileImage}
+</Avatar>              
 
             {editing && (
-              <IconButton
-                component="label"
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 25,
-                  backgroundColor: theme.palette.secondary.main,
-                  color: "#fff",
-                  "&:hover": { backgroundColor: theme.palette.primary.dark },
-                }}
-              >
+             <IconButton
+  component="label"
+  sx={{
+    position: "absolute",
+    bottom: 0,
+    right: {
+      xs: 10,
+      sm: 20,
+      md: 25,
+      lg: 25,
+      xl: 30,
+    },
+    backgroundColor: theme.palette.secondary.main,
+    color: "#fff",
+  }}
+>
                 <PhotoCamera fontSize="small" />
                 <input hidden type="file" accept="image/*" onChange={handleImageUpload} />
               </IconButton>
@@ -287,8 +387,19 @@ export default function Profile() {
 
           </Box>
 
-          <Typography sx={{ mt: 2, fontWeight: 600 }}>
-            Username:{" "}
+<Typography
+  sx={{
+    mt: 2,
+    fontWeight: 600,
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+      md: "1rem",
+      lg: "1.05rem",
+      xl: "1.1rem",
+    },
+  }}
+>            Username:{" "}
             <Box component="span" sx={{ color: "primary.main" }}>
               {user?.name}
             </Box>
@@ -296,34 +407,51 @@ export default function Profile() {
         </Box>
 
         {/* RIGHT CARD */}
-        <Card
-          sx={{
-            flex: 1,
-            maxWidth: 870,
-            borderRadius: 3,
-            boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
-            backdropFilter: "blur(10px)",
-            backgroundColor: theme.palette.background.paper,
-            ml: 15,
-            p: 2,
-            pt: 5,
-          }}
-        >
+      <Card
+  sx={{
+    flex: 1,
+    width: "100%",
+    maxWidth: {
+      xs: "80%",
+      sm: "80%",
+      md: 600,
+      lg: 400,
+      xl: 630,
+    },
+    ml: 0,
+    borderRadius: 3,
+    boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
+    backgroundColor: theme.palette.background.paper,
+    p: {
+      xs: 1,
+      sm: 2,
+      md: 2,
+      lg: 3,
+      xl: 3,
+    },
+    pt: {
+      xs: 2,
+      sm: 3,
+      md: 4,
+      lg: 5,
+      xl: 5,
+    },
+  }}
+>
           <CardContent>
 
             {/* Tab Content in Same Card */}
             {tab === 0 ? (
-              <Grid container spacing={3}>
-                {/* Row 1 */}
-                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
-                  <TextField
+<Grid container spacing={{ xs: 2, sm: 2, md: 3, lg: 3, xl: 4 }}>                {/* Row 1 */}
+<Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                   <TextField
                     label="Name"
                     value={user?.name || ""}
                     onChange={handleChange("name")}
                     disabled={!editing}
                     fullWidth
                     InputProps={{
-                      sx: { borderRadius: "15px", width: "135%" },
+                      sx: { borderRadius: "15px" },
                       startAdornment: (
                         <InputAdornment position="start">
                           <PersonIcon color="action" />
@@ -340,7 +468,7 @@ export default function Profile() {
                     disabled={!editing}
                     fullWidth
                     InputProps={{
-                      sx: { borderRadius: "15px", width: "135%" },
+                      sx: { borderRadius: "15px" },
                       startAdornment: (
                         <InputAdornment position="start">
                           <PhoneIcon color="action" />
@@ -351,14 +479,14 @@ export default function Profile() {
                 </Grid>
 
                 {/* Row 2 */}
-                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
-                     <TextField
+<Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                       <TextField
                     label="Email"
                     value={user?.email || ""}
                     disabled
                     fullWidth
                     InputProps={{
-                      sx: { borderRadius: "15px", width: "135%" },
+                      sx: { borderRadius: "15px" },
                       startAdornment: (
                         <InputAdornment position="start">
                           <EmailIcon color="action" />
@@ -367,7 +495,7 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+               <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                  <TextField
                     label="Address"
                     value={user?.address || ""}
@@ -375,7 +503,7 @@ export default function Profile() {
                     disabled={!editing}
                     fullWidth
                     InputProps={{
-                      sx: { borderRadius: "15px", width: "135%" },
+                      sx: { borderRadius: "15px" },
                       startAdornment: (
                         <InputAdornment position="start">
                           <HomeIcon color="action" />
@@ -386,7 +514,7 @@ export default function Profile() {
                 </Grid>
 
                 {/* Row 3 */}
-                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
+                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                   <TextField
                     label="Designation"
                     value={user?.designation || ""}
@@ -394,7 +522,7 @@ export default function Profile() {
                     disabled={!editing}
                     fullWidth
                     InputProps={{
-                      sx: { borderRadius: "15px", width: "135%" },
+                      sx: { borderRadius: "15px" },
                       startAdornment: (
                         <InputAdornment position="start">
                           <WorkIcon color="action" />
@@ -403,7 +531,7 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                    <TextField
                     label="Company"
                     value={user?.company || ""}
@@ -411,7 +539,7 @@ export default function Profile() {
                     disabled={!editing}
                     fullWidth
                     InputProps={{
-                      sx: { borderRadius: "15px", width: "135%" },
+                      sx: { borderRadius: "15px" },
                       startAdornment: (
                         <InputAdornment position="start">
                           <BusinessIcon color="action" />
@@ -422,15 +550,15 @@ export default function Profile() {
                 </Grid>
 
                 {/* Row 4 */}
-                <Grid item xs={12} sm={6} sx={{ mb: 1, mr: 15 }}>
-                    <TextField
+                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                  <TextField
                     label="Department"
                     value={user?.department || ""}
                     onChange={handleChange("department")}
                     disabled={!editing}
                     fullWidth
                     InputProps={{
-                      sx: { borderRadius: "15px", width: "135%" },
+                      sx: { borderRadius: "15px" },
                       startAdornment: (
                         <InputAdornment position="start">
                           <ApartmentIcon color="action" />
@@ -444,33 +572,57 @@ export default function Profile() {
                 {editing && (
                   <>
                     {/* Full-width Divider */}
-                    <Box sx={{ width: "100%" }}>
-                      <Divider />
-                    </Box>
+                  <Grid item xs={12}>
+  <Divider />
+</Grid>
 
                     <Grid item xs={12}>
-                      <Box sx={{ display: "flex", justifyContent: "flex-end", ml: 81 }}>
-
-                        {/* Save Changes Button */}
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          onClick={handleSave}
-                          sx={{
-                            py: 1.5,
-                            px: 3,
-                            fontWeight: 600,
-                            borderRadius: "15px",
-                            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-                            "&:hover": {
-                              background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
-                            },
-                          }}
-                        >
-                          Save Changes
-                        </Button>
-                      </Box>
-                    </Grid>
+ <Box
+  sx={{
+    display: "flex",
+    justifyContent: {
+      xs: "stretch",
+      sm: "stretch",
+      md: "flex-end",
+      lg: "flex-end",
+      xl: "flex-end",
+    },
+    mt: 3,
+    width: "100%",
+  }}
+>
+    <Button
+      type="submit"
+      variant="contained"
+      onClick={handleSave}
+      sx={{
+        width: {
+          xs: "150%",
+          sm: "150%",
+          md: "auto",
+        },
+        py: 1,
+        px: 3,
+        fontWeight: 600,
+        borderRadius: "15px",
+        background: `linear-gradient(
+          135deg,
+          ${theme.palette.primary.main} 0%,
+          ${theme.palette.secondary.main} 100%
+        )`,
+        "&:hover": {
+          background: `linear-gradient(
+            135deg,
+            ${theme.palette.secondary.main} 0%,
+            ${theme.palette.primary.main} 100%
+          )`,
+        },
+      }}
+    >
+      Save Changes
+    </Button>
+  </Box>
+</Grid>
                   </>
                 )}
 
@@ -484,7 +636,7 @@ export default function Profile() {
                   label="Current Password"
                   type={showPass ? "text" : "password"}
                   fullWidth
-                  sx={{ mb: 4 }}
+                  sx={{ mb: 3 }}
                   value={passwordForm.currentPassword}
                   onChange={handlePasswordChange("currentPassword")}
                   // helperText={passwordErrors.currentPassword}
@@ -563,8 +715,21 @@ export default function Profile() {
                 {/* <Box sx={{ width: "100%" }}> */}
                 <Divider sx={{ mt: 1 }} />
                 {/* </Box> */}
-                <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
-                  {/* Cancel Button */}
+<Box
+  sx={{
+    display: "flex",
+    flexDirection: {
+      xs: "column",
+      sm: "column",
+      md: "row",
+      lg: "row",
+      xl: "row",
+    },
+    justifyContent: "flex-end",
+    gap: 2,
+    mt: 3,
+  }}
+>                  {/* Cancel Button */}
                   <Button
                     onClick={() => {
                       setPasswordForm({
@@ -580,21 +745,19 @@ export default function Profile() {
                   </Button>
 
                   {/* Update Password Button */}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    onClick={handleChangePassword}
-                    sx={{
-                      py: 1.5,
-                      px: 3,
-                      fontWeight: 600,
-                      borderRadius: "15px",
-                      background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-                      "&:hover": {
-                        background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
-                      },
-                    }}
-                  >
+                 <Button
+  variant="contained"
+  sx={{
+    width: {
+      xs: "100%",
+      sm: "100%",
+      md: "auto",
+    },
+    py: 1.5,
+    px: 3,
+    borderRadius: "15px",
+  }}
+>
                     Update Password
                   </Button>
                 </Box>

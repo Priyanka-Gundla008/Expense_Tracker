@@ -7,18 +7,28 @@ import {
   ManyToOne
 } from 'typeorm';
 import { Category } from './category.entity';
+import { User } from './user.entity';
 
 @Entity('expenses')
 export class Expense {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ManyToOne(() => User, (user) => user.expenses, {
+    onDelete: 'CASCADE',
+  })
+  user: User;
+
+  @Column()
+  userId: string;
+
+
   @Column({ length: 100 })
   title: string;
 
   @ManyToOne(() => Category, (category) => category.expenses, {
-    eager: true,          // auto-fetch category
-    onDelete: 'SET NULL', // safe delete
+    eager: true,          
+    onDelete: 'SET NULL', 
   })
   category: Category;
 

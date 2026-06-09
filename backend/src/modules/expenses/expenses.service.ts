@@ -18,6 +18,7 @@ export class ExpensesService {
 
   async createExpense(
     createExpenseDto: CreateExpenseDto,
+    userId: string,
   ): Promise<{ message: string; data: any }> {
 
     const { title, categoryId, amount, date: dateString } = createExpenseDto;
@@ -37,6 +38,7 @@ export class ExpensesService {
       .createQueryBuilder('expense')
       .where('LOWER(expense.title) = LOWER(:title)', { title: trimmedTitle })
       .andWhere('expense.date = :date', { date })
+      .andWhere('expense.userId = :userId', { userId })
       .getOne();
 
     if (existingExpense) {
@@ -59,17 +61,26 @@ export class ExpensesService {
       title: trimmedTitle,
       amount,
       date,
-      category, // ✅ assign relation
+      category,
+      userId,
     });
 
     const saved = await this.expenseRepository.save(expense);
+    const categoryData = {
+      id: saved.category.id,
+      name: saved.category.name,
+      icon: saved.category.icon,
+      createdAt: saved.category.createdAt,
+      updatedAt: saved.category.updatedAt,
+    };
 
     return {
       message: 'Expense created successfully',
       data: {
         id: saved.id,
+        userId: userId,
         title: saved.title,
-        category: saved.category,
+        category: categoryData,
         amount: saved.amount,
         date: this.formatDate(saved.date),
       },
@@ -87,46 +98,76 @@ export class ExpensesService {
   }
 
 
-  async getAllExpenses(): Promise<{ message: string; data: any[] }> {
+  async getAllExpenses(
+    userId: string,
+  ): Promise<{ message: string; userId: string; data: any[] }> {
+
     const expenses = await this.expenseRepository.find({
+      where: { userId },
+      relations: ['category'],
       order: { createdAt: 'DESC' },
     });
 
     return {
       message: 'Expenses fetched successfully',
+      userId,
       data: expenses.map(exp => ({
         id: exp.id,
         title: exp.title,
-        category: exp.category,
+        category: exp.category
+          ? {
+            id: exp.category.id,
+            name: exp.category.name,
+            icon: exp.category.icon,
+            createdAt: exp.category.createdAt,
+            updatedAt: exp.category.updatedAt,
+          }
+          : null,
         amount: exp.amount,
         date: this.formatDate(exp.date),
       })),
     };
   }
 
-  async getExpenseById(id: string): Promise<{ message: string; data: any }> {
-    const expense = await this.expenseRepository.findOne({ where: { id } });
+
+  async getExpenseById(id: string, userId: string): Promise<{ message: string; data: any }> {
+    const expense = await this.expenseRepository.findOne({
+      where: { id, userId },
+    });
+
 
     if (!expense) {
-      throw new NotFoundException(`Expense with ID ${id} not found`);
+      throw new NotFoundException(`Expense with ID ${id} of user ${userId} not found`);
     }
+
+    const categoryData = {
+      id: expense.category.id,
+      name: expense.category.name,
+      icon: expense.category.icon,
+      createdAt: expense.category.createdAt,
+      updatedAt: expense.category.updatedAt,
+    };
 
     return {
       message: 'Expense fetched successfully',
       data: {
         id: expense.id,
+        userId: userId,
         title: expense.title,
-        category: expense.category,
+        category: categoryData,
         amount: expense.amount,
         date: this.formatDate(expense.date),
       },
     };
   }
 
-  async updateExpense(id: string, updateExpenseDto: UpdateExpenseDto): Promise<{ message: string; data: any }> {
-    const expense = await this.expenseRepository.findOne({ where: { id } });
+  async updateExpense(id: string, updateExpenseDto: UpdateExpenseDto, userId: string): Promise<{ message: string; data: any }> {
+    const expense = await this.expenseRepository.findOne({
+      where: { id, userId },
+    });
+
     if (!expense) {
-      throw new NotFoundException(`Expense with ID ${id} not found`);
+      throw new NotFoundException(`Expense with ID ${id} of user ${userId} not found`);
     }
 
     if (updateExpenseDto.date) {
@@ -143,31 +184,42 @@ export class ExpensesService {
     });
 
     const saved = await this.expenseRepository.save(expense);
+    const categoryData = {
+      id: saved.category.id,
+      name: saved.category.name,
+      icon: saved.category.icon,
+      createdAt: saved.category.createdAt,
+      updatedAt: saved.category.updatedAt,
+    };
+
 
     return {
       message: 'Expense updated successfully',
       data: {
         id: saved.id,
+        userId: userId,
         title: saved.title,
-        category: saved.category,
+        category: categoryData,
         amount: saved.amount,
         date: this.formatDate(saved.date),
       },
     };
   }
 
-  async deleteExpense(id: string): Promise<{ message: string; data: any[] }> {
-    const expense = await this.expenseRepository.findOne({ where: { id } });
-    if (!expense) throw new NotFoundException(`Expense with ID ${id} not found`);
+  async deleteExpense(id: string, userId: string): Promise<{ message: string }> {
+    const expense = await this.expenseRepository.findOne({
+      where: { id, userId },
+    });
+
+    if (!expense) throw new NotFoundException(`Expense with ID ${id} of user ${userId} not found`);
 
     await this.expenseRepository.remove(expense);
     return {
-      message: 'Expense deleted successfully',
-      data: [],
+      message: 'Expense deleted successfully'
     };
   }
 
-  async getCurrentMonthTotalExpense(): Promise<{ message: string; data: any }> {
+  async getCurrentMonthTotalExpense(userId: string,): Promise<{ message: string; data: any }> {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth(); // 0-based
@@ -178,13 +230,16 @@ export class ExpensesService {
     const result = await this.expenseRepository
       .createQueryBuilder('expense')
       .select('COALESCE(SUM(expense.amount), 0)', 'total')
-      .where('expense.date >= :startDate', { startDate })
+      .where('expense.userId = :userId', { userId })
+      .andWhere('expense.date >= :startDate', { startDate })
       .andWhere('expense.date < :endDate', { endDate })
       .getRawOne();
+
 
     return {
       message: 'Total expense fetched successfully',
       data: {
+        userId: userId,
         year,
         month: month + 1,
         totalExpense: Number(result.total),
@@ -307,7 +362,7 @@ export class ExpensesService {
     };
   }
 
-  async getCategorySummary(year: number, month?: number) {
+  async getCategorySummary(userId: string, year: number, month?: number) {
     let startDate: Date;
     let endDate: Date;
     const now = new Date();
@@ -330,11 +385,13 @@ export class ExpensesService {
       .select('category.id', 'category_id')
       .addSelect('category.name', 'category_name')
       .addSelect('SUM(expense.amount)', 'amount')
-      .where('expense.date >= :startDate', { startDate })
+      .where('expense.userId = :userId', { userId }) // 👈 REQUIRED
+      .andWhere('expense.date >= :startDate', { startDate })
       .andWhere('expense.date < :endDate', { endDate })
       .groupBy('category.id')
       .addGroupBy('category.name')
       .getRawMany();
+
 
 
 
@@ -360,12 +417,13 @@ export class ExpensesService {
 
     return {
       message: 'Category-wise expense summary fetched successfully',
+      userId: userId,
       data: formatted, // <-- only the array, no nested message
     };
 
   }
 
-  async getMonthlyExpenseTrend(year: number) {
+  async getMonthlyExpenseTrend(userId: string, year: number) {
     const months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
@@ -378,11 +436,13 @@ export class ExpensesService {
       .createQueryBuilder('expense')
       .select('EXTRACT(MONTH FROM expense.date)', 'month')
       .addSelect('SUM(expense.amount)', 'expense')
-      .where('expense.date >= :startDate', { startDate })
+      .where('expense.userId = :userId', { userId })
+      .andWhere('expense.date >= :startDate', { startDate })
       .andWhere('expense.date < :endDate', { endDate })
       .groupBy('month')
       .orderBy('month', 'ASC')
       .getRawMany();
+
 
     // Map DB result → 12 months
     const data = months.map((monthName, index) => {
@@ -402,6 +462,7 @@ export class ExpensesService {
       message: hasData
         ? 'Monthly expense trend fetched successfully'
         : `No expenses found for year ${year}`,
+      userId: userId,
       data,
     };
   }

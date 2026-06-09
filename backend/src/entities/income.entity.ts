@@ -5,13 +5,23 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Unique,
+  ManyToOne,
 } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity('income')
-@Unique(['year', 'month'])
+@Unique(['userId', 'year', 'month'])
 export class Income {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @ManyToOne(() => User, (user) => user.incomes, {
+    onDelete: 'CASCADE',
+  })
+  user: User;
+
+  @Column()
+  userId: string;
 
   @Column()
   year: number;
@@ -27,4 +37,5 @@ export class Income {
 
   @UpdateDateColumn()
   updatedAt: Date;
+  
 }

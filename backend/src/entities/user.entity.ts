@@ -3,8 +3,12 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany
 } from 'typeorm';
+import { Expense } from './expense.entity';
+import { Category } from './category.entity';
+import { Income } from './income.entity';
 
 @Entity('users')
 export class User {
@@ -40,6 +44,15 @@ export class User {
 
   @Column({ nullable: true })
   designation: string;
+
+  @OneToMany(() => Expense, (expense) => expense.user)
+  expenses: Expense[];
+
+  @OneToMany(() => Category, (category) => category.user)
+  categories: Category[];
+
+  @OneToMany(() => Income, (income) => income.user)
+  incomes: Income[];
 
   @Column({ default: false })
   acceptedTerms: boolean;

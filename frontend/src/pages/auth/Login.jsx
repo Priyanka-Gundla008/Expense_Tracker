@@ -155,40 +155,57 @@ function Login() {
 
     return (
         <Box
-            sx={{
-                minHeight: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                background: theme.palette.background.default,
-            }}
-        >
-            <Card
-                sx={{
-                    padding: "1%",
-
-                    width: 500,
-                    borderRadius: 3,
-                    boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: theme.palette.background.paper,
-                }}
-            >
+  sx={{
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: theme.palette.background.default,
+    px: {
+      xs: 2,
+      sm: 3,
+    },
+    py: {
+      xs: 3,
+      sm: 0,
+    },
+  }}
+>
+          <Card
+  sx={{
+    p: {
+      xs: 2,
+      sm: 3,
+    },
+    width: "100%",
+    maxWidth: 500,
+    borderRadius: {
+      xs: 2,
+      sm: 3,
+    },
+    boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
+    backdropFilter: "blur(10px)",
+    backgroundColor: theme.palette.background.paper,
+  }}
+>
                 <CardContent>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            mb: 3,
-                            fontWeight: 700,
-                            textAlign: "center",
-                            color: theme.palette.primary.main,
-                        }}
-                    >
+                   <Typography
+  sx={{
+    mb: 1,
+    fontWeight: 700,
+    textAlign: "center",
+    color: theme.palette.primary.main,
+    fontSize: {
+      xs: "1.8rem",
+      sm: "2.125rem",
+    },
+  }}
+>
                         Expense Tracker
                     </Typography>
                     <Typography
                         variant="body1"
-                        sx={{ mb: 2, textAlign: "center", color: theme.palette.text.primary }}
+                        sx={{ mb: 4, textAlign: "center", color: theme.palette.text.primary }}
                     >
                         Login to manage your expenses
                     </Typography>
@@ -248,40 +265,65 @@ function Login() {
                         />
 
                         {/* Remember Me + Forgot Password */}
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                mt: 1,
-                            }}
-                        >
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={rememberMe}
-                                        onChange={(e) => setRememberMe(e.target.checked)}
-                                        color="primary"
-                                    />
-                                }
-                                label="Remember Me"
-                            />
-                            <Link
-                                href="/forgot-password"
-                                underline="hover"
-                                sx={{ fontSize: 14, color: theme.palette.primary.main }}
-                            >
-                                Forgot Password?
-                            </Link>
-                        </Box>
+                      <Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mt: 1,
+    width: "100%",
+  }}
+>
+  <FormControlLabel
+    control={
+      <Checkbox
+        checked={rememberMe}
+        onChange={(e) => setRememberMe(e.target.checked)}
+        color="primary"
+      />
+    }
+    label="Remember Me"
+    sx={{
+      m: 0,
+      "& .MuiFormControlLabel-label": {
+        fontSize: {
+          xs: "0.8rem",
+          sm: "0.9rem",
+        },
+      },
+    }}
+  />
 
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            fullWidth
-                            sx={{
-                                mt: 3,
-                                py: 1.5,
+  <Link
+    href="/forgot-password"
+    underline="hover"
+    sx={{
+      fontSize: {
+        xs: "0.8rem",
+        sm: "0.9rem",
+      },
+      color: theme.palette.primary.main,
+      whiteSpace: "nowrap",
+    }}
+  >
+    Forgot Password?
+  </Link>
+</Box>
+
+                       <Button
+  type="submit"
+  variant="contained"
+  fullWidth
+  sx={{
+    mt: 3,
+    py: {
+      xs: 1.2,
+      sm: 1.5,
+    },
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
                                 fontWeight: 600,
                                 borderRadius: "15px",
                                 background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
@@ -331,22 +373,23 @@ function Login() {
                         </Button> */}
 
 
-                        <Box
-                            sx={{
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <GoogleLogin
-                                onSuccess={handleGoogleSuccess}
-                                onError={() => console.log("Login failed")}
-                                text="continue_with"
-                                theme="outline"
-                                size="large"
-                                shape="pill"
-                                width="200" // Google requires fixed width to center properly
-                            />
+                     <Box
+  sx={{
+    width: "auto",
+    display: "flex",
+    justifyContent: "center",
+    overflow: "hidden",
+  }}
+>
+                          <GoogleLogin
+  onSuccess={handleGoogleSuccess}
+  onError={() => console.log("Login failed")}
+  text="continue_with"
+  theme="outline"
+  size="large"
+  shape="pill"
+  width={window.innerWidth < 600 ? "250" : "300"}
+/>
                         </Box>
 
 
@@ -354,10 +397,17 @@ function Login() {
 
                     </form>
 
-                    <Typography
-                        variant="body2"
-                        sx={{ mt: 2, textAlign: "center", color: theme.palette.text.primary }}
-                    >
+                   <Typography
+  sx={{
+    mt: 2,
+    textAlign: "center",
+    color: theme.palette.text.primary,
+    fontSize: {
+      xs: "0.85rem",
+      sm: "0.95rem",
+    },
+  }}
+>
                         Don't have an account?{" "}
                         <span
                             onClick={() => navigate("/signup")}
@@ -378,8 +428,10 @@ function Login() {
                 open={notification.open}
                 autoHideDuration={4000}
                 onClose={() => setNotification({ ...notification, open: false })}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            >
+anchorOrigin={{
+  vertical: "top",
+  horizontal: window.innerWidth < 600 ? "center" : "right",
+}}            >
                 <Alert
                     onClose={() => setNotification({ ...notification, open: false })}
                     severity={notification.severity}

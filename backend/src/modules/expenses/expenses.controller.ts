@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Get, Param, Put, Delete, Query, ParseUUIDPipe, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Param, Put, Delete, Query, ParseUUIDPipe, BadRequestException, Req } from '@nestjs/common';
 import { ExpensesService } from './expenses.service';
 import { CreateExpenseDto } from './DTO/create-expense.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -13,15 +13,22 @@ export class ExpensesController {
   constructor(private readonly expensesService: ExpensesService) { }
 
   @Post('/create-expense')
-  @ApiOperation({ summary: 'create expense' })
-  async createExpense(@Body() createExpenseDto: CreateExpenseDto) {
-    return this.expensesService.createExpense(createExpenseDto);
+  @ApiOperation({ summary: 'Create Expense' })
+  async createExpense(
+    @Body() createExpenseDto: CreateExpenseDto,
+    @Req() req: any,
+  ) {
+    return this.expensesService.createExpense(
+      createExpenseDto,
+      req.user.id,
+    );
   }
+
 
   @Get('')
   @ApiOperation({ summary: 'Get all expenses' })
-  async getAll() {
-    return this.expensesService.getAllExpenses();
+  async getAll(@Req() req: any) {
+    return this.expensesService.getAllExpenses(req.user.id);
   }
 
   @Get('search')
@@ -52,8 +59,8 @@ export class ExpensesController {
 
   @Get('total-expense/current-month')
   @ApiOperation({ summary: 'Get total expense for a current month' })
-  getCurrentMonthTotal() {
-    return this.expensesService.getCurrentMonthTotalExpense();
+  getCurrentMonthTotal(@Req() req: any) {
+    return this.expensesService.getCurrentMonthTotalExpense(req.user.id);
   }
 
   @Get("category-summary")
@@ -61,6 +68,7 @@ export class ExpensesController {
   @ApiQuery({ name: 'year', required: true })
   @ApiQuery({ name: 'month', required: false })
   async getCategorySummary(
+    @Req() req: any,
     @Query("year") year: number,
     @Query("month") month?: number,
   ) {
@@ -72,18 +80,15 @@ export class ExpensesController {
       throw new BadRequestException('Month must be between 1 and 12');
     }
 
-    return await this.expensesService.getCategorySummary(+year, month);
+    return await this.expensesService.getCategorySummary(req.user.id, +year, month);
 
-    // return {
-    //   message: 'Category-wise expense summary fetched successfully',
-    //   data,
-    // };
   }
 
   @Get('monthly-trend')
   @ApiOperation({ summary: 'Fetch monthly expense trend for a given year' })
   @ApiQuery({ name: 'year', required: true })
   async getMonthlyExpenseTrend(
+    @Req() req: any,
     @Query('year') year?: number,
   ) {
     if (year && !/^\d{4}$/.test(year.toString())) {
@@ -91,9 +96,8 @@ export class ExpensesController {
     }
 
     const selectedYear = year || new Date().getFullYear();
-    return this.expensesService.getMonthlyExpenseTrend(selectedYear);
+    return this.expensesService.getMonthlyExpenseTrend(req.user.id, selectedYear);
   }
-
 
   @Get(':id')
   @ApiOperation({ summary: 'Get expense by ID' })
@@ -101,9 +105,10 @@ export class ExpensesController {
     @Param('id', new ParseUUIDPipe({
       version: '4',
       exceptionFactory: () => new BadRequestException('Invalid UUID'),
-    }),) id: string,
+    })) id: string,
+    @Req() req: any,
   ) {
-    return this.expensesService.getExpenseById(id);
+    return this.expensesService.getExpenseById(id, req.user.id);
   }
 
   @Put(':id')
@@ -112,20 +117,29 @@ export class ExpensesController {
     @Param('id', new ParseUUIDPipe({
       version: '4',
       exceptionFactory: () => new BadRequestException('Invalid UUID'),
-    }),) id: string,
+    })) id: string,
     @Body() updateExpenseDto: UpdateExpenseDto,
+    @Req() req: any,
   ) {
-    return this.expensesService.updateExpense(id, updateExpenseDto);
+    return this.expensesService.updateExpense(
+      id,
+      updateExpenseDto,
+      req.user.id,
+    );
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete expense by ID' })
-  async deleteExpense(@Param('id', new ParseUUIDPipe({
-    version: '4',
-    exceptionFactory: () => new BadRequestException('Invalid UUID'),
-  }),) id: string) {
-    return this.expensesService.deleteExpense(id);
+  async deleteExpense(
+    @Param('id', new ParseUUIDPipe({
+      version: '4',
+      exceptionFactory: () => new BadRequestException('Invalid UUID'),
+    })) id: string,
+    @Req() req: any,
+  ) {
+    return this.expensesService.deleteExpense(id, req.user.id);
   }
+
 
 
 

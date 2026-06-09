@@ -174,48 +174,111 @@ function Signup() {
 
   // -------------------- Render --------------------
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: theme.palette.background.default,
-      }}
-    >
-      <Card sx={{ padding: "1%", width: 500, borderRadius: 3, boxShadow: "0 8px 30px rgba(0,0,0,0.3)", backgroundColor: theme.palette.background.paper }}>
-        <CardContent>
-          <Typography variant="h4" sx={{ mb: 1, fontWeight: 700, textAlign: "center", color: theme.palette.primary.main }}>
-            Create Account
+<Box
+  sx={{
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: theme.palette.background.default,
+    px: {
+      xs: 2,
+      sm: 3,
+      md: 4,
+    },
+    // overflow: "hidden",
+  }}
+>
+<Card
+  sx={{
+    p: {
+      xs: 1.5,
+      sm: 2,
+    },
+    width: "100%",
+    maxWidth: {
+      xs: 380,
+      sm: 450,
+      md: 500,
+    },
+    borderRadius: {
+      xs: 2,
+      sm: 3,
+    },
+    boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
+    backgroundColor: theme.palette.background.paper,
+  }}
+>        <CardContent>
+<Typography
+  sx={{
+    mb: 0.5,
+    fontWeight: 700,
+    textAlign: "center",
+    color: theme.palette.primary.main,
+    fontSize: {
+      xs: "1.7rem",
+      sm: "2rem",
+      md: "2.2rem",
+    },
+  }}
+>            Create Account
           </Typography>
-          <Typography variant="body2" sx={{ mb: 3, textAlign: "center", color: theme.palette.text.secondary }}>
-            Sign up to start tracking your expenses
+<Typography
+  sx={{
+    mb: 2,
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    fontSize: {
+      xs: "0.85rem",
+      sm: "0.9rem",
+    },
+  }}
+>            Sign up to start tracking your expenses
           </Typography>
+          
 
           <form onSubmit={handleSubmit}>
             {/* Full Name */}
             <TextField
               fullWidth
               label="Full Name"
-              margin="normal"
+              margin="dense"
               value={form.name}
               onChange={handleChange("name")}
               helperText={errors.name}
               FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
-              InputProps={{ startAdornment: <InputAdornment position="start"><AccountCircle /></InputAdornment>, sx: { borderRadius: "15px" } }}
-            />
+              InputProps={{ startAdornment: <InputAdornment position="start"><AccountCircle /></InputAdornment>, }}
+              sx={{
+  "& .MuiInputBase-root": {
+    borderRadius: "15px",
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+  },
+}}
+  />
 
             {/* Email */}
             <TextField
               fullWidth
               label="Email"
               type="email"
-              margin="normal"
+              margin="dense"
               value={form.email}
               onChange={handleChange("email")}
               helperText={errors.email}
               FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
-              InputProps={{ startAdornment: <InputAdornment position="start"><Email /></InputAdornment>, sx: { borderRadius: "15px" } }}
+              InputProps={{ startAdornment: <InputAdornment position="start"><Email /></InputAdornment>,  }}
+              sx={{
+  "& .MuiInputBase-root": {
+    borderRadius: "15px",
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+  },
+}}
             />
 
             {/* Password */}
@@ -223,7 +286,7 @@ function Signup() {
               fullWidth
               label="Password"
               type={showPassword ? "text" : "password"}
-              margin="normal"
+              margin="dense"
               value={form.password}
               onChange={handleChange("password")}
               helperText={errors.password}
@@ -231,8 +294,16 @@ function Signup() {
               InputProps={{
                 startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
                 endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowPassword(!showPassword)}>{showPassword ? <Visibility /> : <VisibilityOff />}</IconButton></InputAdornment>,
-                sx: { borderRadius: "15px" },
               }}
+              sx={{
+  "& .MuiInputBase-root": {
+    borderRadius: "15px",
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+  },
+}}
             />
 
             {/* Confirm Password */}
@@ -240,7 +311,7 @@ function Signup() {
               fullWidth
               label="Confirm Password"
               type={showConfirmPassword ? "text" : "password"}
-              margin="normal"
+              margin="dense"
               value={form.confirmPassword}
               onChange={handleChange("confirmPassword")}
               helperText={errors.confirmPassword}
@@ -248,49 +319,93 @@ function Signup() {
               InputProps={{
                 startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
                 endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>{showConfirmPassword ? <Visibility /> : <VisibilityOff />}</IconButton></InputAdornment>,
-                sx: { borderRadius: "15px" },
               }}
+              sx={{
+  "& .MuiInputBase-root": {
+    borderRadius: "15px",
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+  },
+}}
             />
 
             {/* Terms */}
-            <FormControlLabel
-              sx={{ mt: 1 }}
-              control={<Checkbox checked={form.agree} onChange={handleChange("agree")} />}
-              label={
+       <FormControlLabel
+  sx={{
+    mt: 1,
+    fontSize: {
+        xs: "0.75rem",
+        sm: "0.9rem",
+      },
+    // mb: 0,
+    // alignItems: "center",
+
+    // "& .MuiFormControlLabel-label": {
+    //   whiteSpace: "nowrap",
+    //   fontSize: {
+    //     xs: "0.75rem",
+    //     sm: "0.9rem",
+    //   },
+    // },
+
+    // "& .MuiCheckbox-root": {
+    //   pt: 0,
+    // },
+  }}
+  control={
+    <Checkbox
+      checked={form.agree}
+      onChange={handleChange("agree")}
+      size="small"
+    />
+  }
+  label={
                 <Typography variant="body2">
                   By signing up, you agree to our{" "}
-                  <span style={{ color: theme.palette.primary.main, cursor: "pointer" }} onClick={() => setOpenTerms(true)}>
+                  <span
+                   style={{ 
+                    color: theme.palette.primary.main, 
+                    cursor: "pointer",
+                    fontWeight: 500,
+                   }} 
+                   onClick={() => setOpenTerms(true)}>
                     Terms & Conditions
                   </span>
                 </Typography>
               }
-            />
+/>
             {errors.agree && <Typography variant="caption" color="error" sx={{ display: "block", ml: 1 }}>{errors.agree}</Typography>}
 
             {/* Submit */}
             <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 2,
-                py: 1.5,
-                borderRadius: "15px",
-                fontWeight: 600,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`
-              }}
-            >
+  type="submit"
+  fullWidth
+  variant="contained"
+  sx={{
+    mt: 2,
+    py: 1,
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+    borderRadius: "15px",
+    fontWeight: 600,
+    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+  }}
+>
               Sign Up
             </Button>
           </form>
 
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              my: 2,
-            }}
-          >
+        <Box
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    my: 1,
+  }}
+>
             <Box sx={{ flex: 1, height: "1px", backgroundColor: "#ccc" }} />
             <Typography sx={{ mx: 2, color: "#888", fontWeight: 500 }}>
               OR
@@ -298,23 +413,39 @@ function Signup() {
             <Box sx={{ flex: 1, height: "1px", backgroundColor: "#ccc" }} />
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-               onError={() => console.log("Signup failed")}
-              text="signup_with"   
-              theme="outline"
-              size="large"
-              shape="pill"
-              width="200"
-            />
-          </Box>
+         <Box
+  sx={{
+    width: "auto",
+    display: "flex",
+    justifyContent: "center",
+    mt: 0.5,
+    overflow: "hidden",
+  }}
+>
+  <GoogleLogin
+    onSuccess={handleGoogleSuccess}
+    onError={() => console.log("Signup failed")}
+    text="signup_with"
+    theme="outline"
+    size="large"
+    shape="pill"
+    width={window.innerWidth < 600 ? "240" : "300"}
+  />
+</Box>
 
 
 
 
-          <Typography variant="body2" sx={{ mt: 2, textAlign: "center" }} >
-            Already have an account?{" "}
+<Typography
+  sx={{
+    mt: 1,
+    textAlign: "center",
+    fontSize: {
+      xs: "0.85rem",
+      sm: "0.95rem",
+    },
+  }}
+>            Already have an account?{" "}
             <Link href="/login" underline="hover">
               Login
             </Link>
@@ -326,8 +457,10 @@ function Signup() {
         open={notification.open}
         autoHideDuration={4000}
         onClose={() => setNotification({ ...notification, open: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
+anchorOrigin={{
+  vertical: "top",
+  horizontal: window.innerWidth < 600 ? "center" : "right",
+}}      >
         <Alert
           onClose={() => setNotification({ ...notification, open: false })}
           severity={notification.severity}

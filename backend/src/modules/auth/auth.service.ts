@@ -36,7 +36,7 @@ export class AuthService {
     }
 
     const payload = {
-      sub: user.id,
+      id: user.id,
       email: user.email,
     };
 
@@ -105,45 +105,46 @@ export class AuthService {
     };
   }
 
- async googleLogin(idToken: string) {
-  try {
-    const ticket = await this.googleClient.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const payload = ticket.getPayload();
-    if (!payload) throw new UnauthorizedException();
-
-    const { sub, email, name, picture } = payload;
-
-    // ✅ Find user by email
-    let user = await this.usersService.findByEmail(email);
-
-    // ✅ If not exists → create user
-    if (!user) {
-      user = await this.usersService.createGoogleUser({
-        email,
-        name,
-        picture,
-        googleId: sub,
+  async googleLogin(idToken: string) {
+    try {
+      const ticket = await this.googleClient.verifyIdToken({
+        idToken,
+        audience: process.env.GOOGLE_CLIENT_ID,
       });
+
+      const payload = ticket.getPayload();
+      if (!payload) throw new UnauthorizedException();
+
+      const { sub, email, name, picture } = payload;
+
+      // ✅ Find user by email
+      let user = await this.usersService.findByEmail(email);
+
+      // ✅ If not exists → create user
+      if (!user) {
+        user = await this.usersService.createGoogleUser({
+          email,
+          name,
+          picture,
+          googleId: sub,
+        });
+      }
+
+      const jwtPayload = {
+        id: user.id, // UUID from DB
+        email: user.email,
+      };
+
+      console.log("jwtPayload", jwtPayload)
+      return {
+        message: 'Google login successful',
+        token: this.jwtService.sign(jwtPayload),
+        user,
+      };
+    } catch (err) {
+      console.error("Google login error:", err);
+      throw new UnauthorizedException('Invalid Google token');
     }
-
-    const jwtPayload = {
-      sub: user.id, // UUID from DB
-      email: user.email,
-    };
-
-    return {
-      message: 'Google login successful',
-      token: this.jwtService.sign(jwtPayload),
-      user,
-    };
-  } catch (err) {
-    console.error("Google login error:", err);
-    throw new UnauthorizedException('Invalid Google token');
   }
-}
 
 }

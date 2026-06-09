@@ -14,13 +14,17 @@ export class CategoriesService {
 
     async createCategory(
         createCategoryDto: CreateCategoryDto,
+        userId: string,
     ): Promise<{ message: string; data: any }> {
+
+        if (!userId) {
+            throw new BadRequestException('User ID is required');
+        }
 
         const name = createCategoryDto.name.trim();
 
-        // 🔹 Prevent duplicate category
         const exists = await this.categoryRepository.findOne({
-            where: { name },
+            where: { name, userId },
         });
 
         if (exists) {
@@ -30,6 +34,7 @@ export class CategoriesService {
         const category = this.categoryRepository.create({
             name,
             icon: createCategoryDto.icon,
+            userId,
         });
 
         const saved = await this.categoryRepository.save(category);
@@ -38,25 +43,37 @@ export class CategoriesService {
             message: 'Category created successfully',
             data: {
                 id: saved.id,
+                userId: userId,
                 name: saved.name,
                 icon: saved.icon,
             },
         };
     }
 
-    async getAllCategories(): Promise<{ message: string; data: Category[] }> {
+
+
+    async getAllCategories(userId: string): Promise<{ message: string; userId: string; data: any[] }> {
         const categories = await this.categoryRepository.find({
+            where: { userId },
             order: { createdAt: 'DESC' },
         });
 
         return {
             message: 'Categories fetched successfully',
-            data: categories,
+            userId,
+            data: categories.map(cat => ({
+                id: cat.id,
+                name: cat.name,
+                icon: cat.icon,
+                createdAt: cat.createdAt,
+                updatedAt: cat.updatedAt,
+            })),
         };
     }
 
-    async getCategoryById(id: string): Promise<{ message: string; data: Category }> {
-        const category = await this.categoryRepository.findOne({ where: { id } });
+
+    async getCategoryById(id: string, userId: string): Promise<{ message: string; data: Category }> {
+        const category = await this.categoryRepository.findOne({ where: { id, userId } });
         if (!category) {
             throw new NotFoundException(`Category with ID ${id} not found`);
         }
@@ -67,21 +84,27 @@ export class CategoriesService {
         };
     }
 
-    async updateCategory(id: string, updateCategoryDto: UpdateCategoryDto): Promise<{ message: string; data: any }> {
-        const category = await this.categoryRepository.findOne({ where: { id } });
+
+    async updateCategory(
+        id: string,
+        updateCategoryDto: UpdateCategoryDto,
+        userId: string,
+    ): Promise<{ message: string; data: any }> {
+
+        const category = await this.categoryRepository.findOne({ where: { id, userId } });
         if (!category) {
             throw new NotFoundException(`Category with ID ${id} not found`);
         }
 
-        // Check for duplicate name if name is being updated
         if (updateCategoryDto.name && updateCategoryDto.name !== category.name) {
-            const existing = await this.categoryRepository.findOne({ where: { name: updateCategoryDto.name } });
+            const existing = await this.categoryRepository.findOne({
+                where: { name: updateCategoryDto.name, userId },
+            });
             if (existing) {
                 throw new BadRequestException(`Category with name "${updateCategoryDto.name}" already exists`);
             }
         }
 
-        // Apply updates
         Object.assign(category, {
             name: updateCategoryDto.name ?? category.name,
             icon: updateCategoryDto.icon ?? category.icon,
@@ -95,8 +118,8 @@ export class CategoriesService {
         };
     }
 
-    async deleteCategory(id: string): Promise<{ message: string; data: any[] }> {
-        const category = await this.categoryRepository.findOne({ where: { id } });
+    async deleteCategory(id: string, userId: string): Promise<{ message: string }> {
+        const category = await this.categoryRepository.findOne({ where: { id, userId } });
         if (!category) {
             throw new NotFoundException(`Category with ID ${id} not found`);
         }
@@ -104,8 +127,8 @@ export class CategoriesService {
         await this.categoryRepository.remove(category);
 
         return {
-            message: 'Category deleted successfully',
-            data: [],
+            message: 'Category deleted successfully'
         };
     }
+
 }

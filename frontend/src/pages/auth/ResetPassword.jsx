@@ -11,6 +11,7 @@ import {
   Snackbar,
   Alert,
   useTheme,
+  Divider
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
@@ -106,41 +107,73 @@ function ResetPassword() {
 
   return (
     <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: theme.palette.background.default,
-      }}
-    >
+  sx={{
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: theme.palette.background.default,
+    px: {
+      xs: 2,
+      sm: 3,
+    },
+    py: {
+      xs: 2,
+      sm: 0,
+    },
+  }}
+>
       <Card
-        sx={{
-          width: 500,
-          borderRadius: 3,
-          boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
-          backgroundColor: theme.palette.background.paper,
-        }}
-      >
-        <CardContent>
-          <Typography
-            variant="h4"
-            sx={{
-              mb: 2,
-              fontWeight: 700,
-              textAlign: "center",
-              color: theme.palette.primary.main,
-            }}
-          >
-            Reset Password
-          </Typography>
+  sx={{
+    width: "100%",
+    maxWidth: {
+      xs: 380,
+      sm: 450,
+      md: 500,
+    },
+    borderRadius: {
+      xs: 2,
+      sm: 3,
+    },
+    boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
+    backgroundColor: theme.palette.background.paper,
+  }}
+>
+<CardContent
+  sx={{
+    p: {
+      xs: 2,
+      sm: 3,
+    },
+  }}
+>        <Typography
+  sx={{
+    mb: 1.5,
+    fontWeight: 700,
+    textAlign: "center",
+    color: theme.palette.primary.main,
+    fontSize: {
+      xs: "1.8rem",
+      sm: "2.2rem",
+    },
+  }}
+>
+  Reset Password
+</Typography>
 
-          <Typography
-            variant="body2"
-            sx={{ mb: 3, textAlign: "center", color: theme.palette.text.secondary }}
-          >
-            Enter your new password below
-          </Typography>
+         <Typography
+  sx={{
+    mb: 2.5,
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    fontSize: {
+      xs: "0.85rem",
+      sm: "0.95rem",
+    },
+  }}
+>
+  Enter your new password below
+</Typography>
 
           <form onSubmit={handleSubmit}>
             {/* New Password */}
@@ -166,8 +199,17 @@ function ResetPassword() {
                     </IconButton>
                   </InputAdornment>
                 ),
-                sx: { borderRadius: "15px" },
+                
               }}
+              sx={{
+  "& .MuiInputBase-root": {
+    borderRadius: "15px",
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+  },
+}}
             />
 
             {/* Confirm Password */}
@@ -186,37 +228,69 @@ function ResetPassword() {
                     <Lock />
                   </InputAdornment>
                 ),
-                sx: { borderRadius: "15px" },
               }}
+              sx={{
+  "& .MuiInputBase-root": {
+    borderRadius: "15px",
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+  },
+}}
             />
 
-            <Button
-              type="submit"
-              fullWidth
-              sx={{
-                mt: 3,
-                py: 1.5,
-                borderRadius: "15px",
-                fontWeight: 600,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                "&:hover": {
-                  background: `linear-gradient(135deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
-                },
-              }}
-              variant="contained"
-            >
-              Reset Password
-            </Button>
+            <Divider
+  sx={{
+    my: {
+      xs: 2,
+      sm: 2.5,
+    },
+  }}
+/>
+
+           <Button
+  type="submit"
+  fullWidth
+  variant="contained"
+  sx={{
+    mt: 1,
+    py: {
+      xs: 1.2,
+      sm: 1.5,
+    },
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+    borderRadius: "15px",
+    fontWeight: 600,
+    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+    "&:hover": {
+      background: `linear-gradient(135deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
+    },
+  }}
+>
+  Reset Password
+</Button>
           </form>
         </CardContent>
       </Card>
 
-      <Snackbar
-        open={notification.open}
-        autoHideDuration={4000}
-        onClose={() => setNotification({ ...notification, open: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
+     <Snackbar
+  open={notification.open}
+  autoHideDuration={4000}
+  onClose={() =>
+    setNotification({
+      ...notification,
+      open: false,
+    })
+  }
+  anchorOrigin={{
+    vertical: "top",
+    horizontal: window.innerWidth < 600 ? "center" : "right",
+  }}
+>
         <Alert severity={notification.severity} variant="filled">
           {notification.message}
         </Alert>
