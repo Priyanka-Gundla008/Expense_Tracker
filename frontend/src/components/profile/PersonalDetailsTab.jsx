@@ -148,25 +148,29 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
         />
      </Box>
       {/* Divider — always visible */}
- <Box sx={{ gridColumn: "1 / -1" }}>
-  <Divider />
-</Box>
+
       {/* Save Changes + Cancel — only in edit mode */}
-   {editing && (
-    
+  {editing && (
+  <>
+    <Divider sx={{ gridColumn: "1 / -1", width: "100%" }} />
+
     <Box
       sx={{
         gridColumn: "1 / -1",
         width: "100%",
         display: "flex",
-        flexDirection: { xs: "column", sm: "row", md: "row", lg: "row", xl: "row" },
+        flexDirection: {
+          xs: "column",
+          sm: "row",
+          md: "row",
+          lg: "row",
+          xl: "row",
+        },
         justifyContent: "flex-end",
         alignItems: "center",
         gap: 2,
       }}
     >
-        
-
       <Button
         onClick={onCancel}
         sx={{
@@ -185,9 +189,7 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
         sx={{
           py: 1,
           px: 3,
-                      width: { xs: "100%", sm: "auto", md: "auto" },
-
-        //   fontWeight: 600,
+          width: { xs: "100%", sm: "auto", md: "auto" },
           borderRadius: "15px",
           background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
           "&:hover": {
@@ -198,6 +200,7 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
         Save Changes
       </Button>
     </Box>
+  </>
 )}
 
     </Box>
