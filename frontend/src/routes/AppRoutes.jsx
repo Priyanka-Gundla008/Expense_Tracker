@@ -8,7 +8,8 @@ import Category from "../pages/CategoryPage";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import PasswordResetConfirmation from "../pages/auth/EmailConfirmation";
 import ResetPassword from "../pages/auth/ResetPassword";
-import Profile from "../pages/profile";
+import Profile from "../pages/ProfileInfo";
+
 
 //const isAuthenticated = () => !!localStorage.getItem("token");
 

@@ -16,10 +16,11 @@ import {
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import CategoryIcon from "@mui/icons-material/Category";
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUserById } from "../services/userService";
 
-const drawerWidth = 280;
+const drawerWidth = 260;
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
@@ -53,9 +54,19 @@ function Sidebar({ mobileOpen, handleDrawerToggle }) {
   const drawerContent = (
     <>
       <Box sx={{ p: 2 }}>
-        <Typography variant="h5" fontWeight={800} color="primary" textAlign="center">
-          Expense Tracker
-        </Typography>
+      <Typography
+        variant="h5"
+        fontWeight={630}
+        color="primary"
+        textAlign="center"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        gap={1}
+      >
+        <AccountBalanceIcon />
+        Expense Tracker
+      </Typography>
       </Box>
 
       <Box
