@@ -82,7 +82,7 @@ export default function RechartsPie() {
     <Box
       sx={{
         flex: 1,
-        p: 1,
+        p: 3,
         borderRadius: "18px",
         background: theme.palette.background.primary,
         boxShadow: "0 8px 20px rgba(0,0,0,0.08)",

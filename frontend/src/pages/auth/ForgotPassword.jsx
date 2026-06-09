@@ -68,41 +68,66 @@ function ForgotPassword() {
     };
 
     return (
-        <Box
-            sx={{
-                minHeight: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                background: theme.palette.background.default,
-            }}
-        >
-            <Card
-                sx={{
-                    padding: "1%",
-                    width: 500,
-                    borderRadius: 3,
-                    boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: theme.palette.background.paper,
-                }}
-            >
+       <Box
+  sx={{
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: theme.palette.background.default,
+    px: {
+      xs: 2,
+      sm: 3,
+    },
+    py: {
+      xs: 3,
+      sm: 0,
+    },
+  }}
+>
+           <Card
+  sx={{
+    p: {
+      xs: 2,
+      sm: 3,
+    },
+    width: "100%",
+    maxWidth: 500,
+    borderRadius: {
+      xs: 2,
+      sm: 3,
+    },
+    boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
+    backdropFilter: "blur(10px)",
+    backgroundColor: theme.palette.background.paper,
+  }}
+>
                 <CardContent>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            mb: 3,
-                            fontWeight: 700,
-                            textAlign: "center",
-                            color: theme.palette.primary.main,
-                        }}
-                    >
+                   <Typography
+  sx={{
+    mb: 1,
+    fontWeight: 700,
+    textAlign: "center",
+    color: theme.palette.primary.main,
+    fontSize: {
+      xs: "1.8rem",
+      sm: "2.125rem",
+    },
+  }}
+>
                         Forgot Password
                     </Typography>
-                    <Typography
-                        variant="body1"
-                        sx={{ mb: 2, textAlign: "center", color: theme.palette.text.primary }}
-                    >
+                 <Typography
+  sx={{
+    mb: 3,
+    textAlign: "center",
+    color: theme.palette.text.primary,
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+  }}
+>
                         Enter your registered email to receive a password reset link
                     </Typography>
 
@@ -119,22 +144,35 @@ function ForgotPassword() {
                             helperText={error}
                             FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
                             InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Email color="action" />
-                                    </InputAdornment>
-                                ),
-                                sx: { borderRadius: "15px" },
-                            }}
+  startAdornment: (
+    <InputAdornment position="start">
+      <Email color="action" />
+    </InputAdornment>
+  ),
+  sx: {
+    borderRadius: "15px",
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
+  },
+}}
                         />
 
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            fullWidth
-                            sx={{
-                                mt: 3,
-                                py: 1.5,
+                       <Button
+  type="submit"
+  variant="contained"
+  fullWidth
+  sx={{
+    mt: 3,
+    py: {
+      xs: 1.2,
+      sm: 1.5,
+    },
+    fontSize: {
+      xs: "0.9rem",
+      sm: "1rem",
+    },
                                 fontWeight: 600,
                                 borderRadius: "15px",
                                 background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
@@ -152,7 +190,11 @@ function ForgotPassword() {
                                 mt: 2,
                                 textAlign: "center",
                                 color: theme.palette.text.primary,
-                                cursor: "pointer",
+                                  cursor: "pointer",
+    fontSize: {
+      xs: "0.85rem",
+      sm: "0.95rem",
+    },
                             }}
                             onClick={() => navigate("/login")}
                         >
@@ -167,8 +209,10 @@ function ForgotPassword() {
                 open={notification.open}
                 autoHideDuration={4000}
                 onClose={() => setNotification({ ...notification, open: false })}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            >
+anchorOrigin={{
+  vertical: "top",
+  horizontal: window.innerWidth < 600 ? "center" : "right",
+}}            >
                 <Alert
                     onClose={() => setNotification({ ...notification, open: false })}
                     severity={notification.severity}

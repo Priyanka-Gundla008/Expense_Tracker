@@ -15,8 +15,8 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useTheme } from "@mui/material/styles";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getUserById, updateUser, changePassword } from "../services/userService";
-import PersonalDetailsTab from "../components/PersonalDetailsTab";
-import ChangePasswordTab from "../components/ChangePasswordTab";
+import PersonalDetailsTab from "../components/profile/PersonalDetailsTab";
+import ChangePasswordTab from "../components/profile/ChangePasswordTab";
 
 export default function Profile() {
   const theme = useTheme();
