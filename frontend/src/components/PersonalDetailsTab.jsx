@@ -156,8 +156,7 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
     
     <Box
       sx={{
-            gridColumn: "1 / -1",
-
+        gridColumn: "1 / -1",
         width: "100%",
         display: "flex",
         flexDirection: { xs: "column", sm: "row", md: "row", lg: "row", xl: "row" },
