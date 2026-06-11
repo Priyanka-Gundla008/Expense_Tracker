@@ -328,35 +328,41 @@ function Dashboard() {
                     </TableHead>
 
                     <TableBody>
-                      {recentExpenses.map((row, index) => (
-                        <TableRow key={index}>
-                          <TableCell align="center">{index + 1}</TableCell>{" "}
-                          {/* Serial Number */}
-                          <TableCell align="center">{row.date}</TableCell>
-                          <TableCell align="center">
-                            {row.category?.name}
-                          </TableCell>
-                          <TableCell align="center">{row.title}</TableCell>
-                          <TableCell align="center">
-                            <Box
-                              sx={{
-                                display: "inline-block",
-                                px: 2,
-                                py: 0.5,
-                                borderRadius: "10px",
-                                backgroundColor: "#d1f9d5ff", // 🌱 light green
-                                color: theme.palette.text.paper,
-                                fontWeight: 700,
-                                fontSize: "1rem",
-                                textAlign: "flex-center",
-                                minWidth: 90,
-                              }}
-                            >
-                              ₹{row.amount}
-                            </Box>
+                      {recentExpenses?.length > 0 ? (
+                        recentExpenses.map((row, index) => (
+                          <TableRow key={index}>
+                            <TableCell align="center">{index + 1}</TableCell>
+                            <TableCell align="center">{row.date}</TableCell>
+                            <TableCell align="center">
+                              {row.category?.name}
+                            </TableCell>
+                            <TableCell align="center">{row.title}</TableCell>
+                            <TableCell align="center">
+                              <Box
+                                sx={{
+                                  display: "inline-block",
+                                  px: 2,
+                                  py: 0.5,
+                                  borderRadius: "10px",
+                                  backgroundColor: "#d1f9d5ff",
+                                  color: theme.palette.text.paper,
+                                  fontWeight: 700,
+                                  fontSize: "1rem",
+                                  minWidth: 90,
+                                }}
+                              >
+                                ₹{row.amount}
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={5} align="center">
+                            No recent expenses found.
                           </TableCell>
                         </TableRow>
-                      ))}
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>
