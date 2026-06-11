@@ -15,7 +15,7 @@ import {
   Stack,
   useMediaQuery,
   Card,
-  Typography
+  Typography,
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -33,9 +33,7 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
 
   const [page, setPage] = useState(0);
 
-  const [rowsPerPage, setRowsPerPage] = useState(
-    isMobile ? 3 : 5
-  );
+  const [rowsPerPage, setRowsPerPage] = useState(isMobile ? 3 : 5);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -51,252 +49,237 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
 
   const paginatedExpenses = expenses.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * rowsPerPage + rowsPerPage,
   );
 
   return (
     <>
       {/* MOBILE VIEW */}
 
-     {/* MOBILE VIEW */}
+      {/* MOBILE VIEW */}
 
-{isMobile ? (
-  <>
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2
-      }}
-    >
-      {paginatedExpenses.map((expense, index) => (
-        <Card
-          key={expense.id}
-          sx={{
-            borderRadius: 3,
-
-            boxShadow: 4,
-
-            width: "100%",
-
-            overflow: "hidden",
-
-            transition: "0.3s",
-
-            "&:hover": {
-              transform: "translateY(-3px)"
-            }
-          }}
-        >
+      {isMobile ? (
+        <>
           <Box
             sx={{
-              p: 2
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
             }}
           >
-            <Stack spacing={1.5}>
-              {/* TOP ROW */}
-
-              <Box
+            {paginatedExpenses.map((expense, index) => (
+              <Card
+                key={expense.id}
                 sx={{
-                  display: "flex",
+                  borderRadius: 3,
 
-                  justifyContent: "space-between",
+                  boxShadow: 4,
 
-                  alignItems: "center"
+                  width: "100%",
+
+                  overflow: "hidden",
+
+                  transition: "0.3s",
+
+                  "&:hover": {
+                    transform: "translateY(-3px)",
+                  },
                 }}
               >
-                <Typography
-                  fontWeight={700}
-                  sx={{
-                    fontSize: "0.9rem"
-                  }}
-                >
-                  #
-                  {page * rowsPerPage +
-                    index +
-                    1}
-                </Typography>
-
                 <Box
                   sx={{
-                    px: 1.5,
-
-                    py: 0.5,
-
-                    borderRadius: "8px",
-
-                    backgroundColor:
-                      "#d1f9d5ff",
-
-                    fontWeight: 700,
-
-                    fontSize: "0.85rem",
-
-                    whiteSpace: "nowrap"
+                    p: 2,
                   }}
                 >
-                  ₹ {expense.amount}
+                  <Stack spacing={1.5}>
+                    {/* TOP ROW */}
+
+                    <Box
+                      sx={{
+                        display: "flex",
+
+                        justifyContent: "space-between",
+
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography
+                        fontWeight={700}
+                        sx={{
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        #{page * rowsPerPage + index + 1}
+                      </Typography>
+
+                      <Box
+                        sx={{
+                          px: 1.5,
+
+                          py: 0.5,
+
+                          borderRadius: "8px",
+
+                          backgroundColor: "#d1f9d5ff",
+
+                          fontWeight: 700,
+
+                          fontSize: "0.85rem",
+
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        ₹ {expense.amount}
+                      </Box>
+                    </Box>
+
+                    {/* TITLE */}
+
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      sx={{
+                        fontSize: {
+                          xs: "1rem",
+                          sm: "1.1rem",
+                        },
+
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {expense.title}
+                    </Typography>
+
+                    {/* CATEGORY */}
+
+                    <Typography
+                      color="text.secondary"
+                      sx={{
+                        fontSize: {
+                          xs: "0.85rem",
+                          sm: "0.95rem",
+                        },
+
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      <strong>Category :</strong> {expense.category?.name}
+                    </Typography>
+
+                    {/* DATE */}
+
+                    <Typography
+                      color="text.secondary"
+                      sx={{
+                        fontSize: {
+                          xs: "0.85rem",
+                          sm: "0.95rem",
+                        },
+                      }}
+                    >
+                      <strong>Date :</strong> {expense.date}
+                    </Typography>
+
+                    {/* BUTTONS */}
+
+                    <Stack
+                      direction={{
+                        xs: "column",
+                        sm: "row",
+                      }}
+                      spacing={1.5}
+                      mt={1}
+                    >
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        size="small"
+                        color="edit"
+                        startIcon={<EditIcon />}
+                        sx={{
+                          borderRadius: "10px",
+
+                          textTransform: "none",
+
+                          fontWeight: 600,
+
+                          py: 1,
+                        }}
+                        onClick={() => onEdit(expense)}
+                      >
+                        Edit
+                      </Button>
+
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        size="small"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        sx={{
+                          borderRadius: "10px",
+
+                          textTransform: "none",
+
+                          fontWeight: 600,
+
+                          py: 1,
+                        }}
+                        onClick={() => onDelete(expense.id)}
+                      >
+                        Delete
+                      </Button>
+                    </Stack>
+                  </Stack>
                 </Box>
-              </Box>
-
-              {/* TITLE */}
-
-              <Typography
-                variant="h6"
-                fontWeight={700}
-                sx={{
-                  fontSize: {
-                    xs: "1rem",
-                    sm: "1.1rem"
-                  },
-
-                  wordBreak: "break-word"
-                }}
-              >
-                {expense.title}
-              </Typography>
-
-              {/* CATEGORY */}
-
-              <Typography
-                color="text.secondary"
-                sx={{
-                  fontSize: {
-                    xs: "0.85rem",
-                    sm: "0.95rem"
-                  },
-
-                  wordBreak: "break-word"
-                }}
-              >
-                <strong>Category :</strong>{" "}
-                {expense.category?.name}
-              </Typography>
-
-              {/* DATE */}
-
-              <Typography
-                color="text.secondary"
-                sx={{
-                  fontSize: {
-                    xs: "0.85rem",
-                    sm: "0.95rem"
-                  }
-                }}
-              >
-                <strong>Date :</strong>{" "}
-                {expense.date}
-              </Typography>
-
-              {/* BUTTONS */}
-
-              <Stack
-                direction={{
-                  xs: "column",
-                  sm: "row"
-                }}
-                spacing={1.5}
-                mt={1}
-              >
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  size="small"
-                  color="edit"
-                  startIcon={<EditIcon />}
-                  sx={{
-                    borderRadius: "10px",
-
-                    textTransform: "none",
-
-                    fontWeight: 600,
-
-                    py: 1
-                  }}
-                  onClick={() =>
-                    onEdit(expense)
-                  }
-                >
-                  Edit
-                </Button>
-
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  size="small"
-                  color="error"
-                  startIcon={<DeleteIcon />}
-                  sx={{
-                    borderRadius: "10px",
-
-                    textTransform: "none",
-
-                    fontWeight: 600,
-
-                    py: 1
-                  }}
-                  onClick={() =>
-                    onDelete(expense.id)
-                  }
-                >
-                  Delete
-                </Button>
-              </Stack>
-            </Stack>
+              </Card>
+            ))}
           </Box>
-        </Card>
-      ))}
-    </Box>
 
-    {/* MOBILE PAGINATION */}
+          {/* MOBILE PAGINATION */}
 
-    <Box
-      sx={{
-        mt: 3,
+          <Box
+            sx={{
+              mt: 3,
 
-        display: "flex",
-
-        justifyContent: "center",
-
-        width: "100%"
-      }}
-    >
-      <TablePagination
-        component="div"
-        count={expenses.length}
-        page={page}
-        onPageChange={handleChangePage}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={
-          handleChangeRowsPerPage
-        }
-        rowsPerPageOptions={[3, 5, 10]}
-        sx={{
-          ".MuiTablePagination-toolbar":
-            {
-              flexWrap: "wrap",
+              display: "flex",
 
               justifyContent: "center",
 
-              gap: 1,
+              width: "100%",
+            }}
+          >
+            <TablePagination
+              component="div"
+              count={expenses.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[3, 5, 10]}
+              sx={{
+                ".MuiTablePagination-toolbar": {
+                  flexWrap: "wrap",
 
-              px: 0
-            },
+                  justifyContent: "center",
 
-          ".MuiTablePagination-selectLabel":
-            {
-              fontSize: "0.8rem"
-            },
+                  gap: 1,
 
-          ".MuiTablePagination-displayedRows":
-            {
-              fontSize: "0.8rem"
-            }
-        }}
-      />
-    </Box>
-  </>
-)  : (
+                  px: 0,
+                },
+
+                ".MuiTablePagination-selectLabel": {
+                  fontSize: "0.8rem",
+                },
+
+                ".MuiTablePagination-displayedRows": {
+                  fontSize: "0.8rem",
+                },
+              }}
+            />
+          </Box>
+        </>
+      ) : (
         /* DESKTOP TABLE VIEW */
 
         <TableContainer
@@ -305,8 +288,7 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
             overflowX: "auto",
             borderRadius: 3,
             boxShadow: 4,
-            backgroundColor:
-              theme.palette.background.paper
+            backgroundColor: theme.palette.background.paper,
           }}
         >
           <Table>
@@ -317,39 +299,32 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
                 sx={{
                   background: isLight
                     ? `linear-gradient(90deg, ${theme.palette.secondary.main}, ${theme.palette.secondary.main})`
-                    : theme.palette.background.paper
+                    : theme.palette.background.paper,
                 }}
               >
-                {[
-                  "S.No",
-                  "Title",
-                  "Category",
-                  "Amount",
-                  "Date",
-                  "Actions"
-                ].map((head) => (
-                  <TableCell
-                    key={head}
-                    align="center"
-                    sx={{
-                      fontWeight: 700,
+                {["S.No", "Title", "Category", "Amount", "Date", "Actions"].map(
+                  (head) => (
+                    <TableCell
+                      key={head}
+                      align="center"
+                      sx={{
+                        fontWeight: 700,
 
-                      fontSize: {
-                        sm: "0.9rem",
-                        md: "1rem",
-                        lg: "1.1rem"
-                      },
+                        fontSize: {
+                          sm: "0.9rem",
+                          md: "1rem",
+                          lg: "1.1rem",
+                        },
 
-                      color: isLight
-                        ? "#fff"
-                        : theme.palette.text.primary,
+                        color: isLight ? "#fff" : theme.palette.text.primary,
 
-                      whiteSpace: "nowrap"
-                    }}
-                  >
-                    {head}
-                  </TableCell>
-                ))}
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {head}
+                    </TableCell>
+                  ),
+                )}
               </TableRow>
             </TableHead>
 
@@ -357,10 +332,7 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
 
             <TableBody>
               {paginatedExpenses.map((expense, index) => (
-                <TableRow
-                  key={expense.id}
-                  hover
-                >
+                <TableRow key={expense.id} hover>
                   {/* SERIAL NUMBER */}
 
                   <TableCell
@@ -368,8 +340,8 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
                     sx={{
                       fontSize: {
                         sm: "0.85rem",
-                        md: "0.95rem"
-                      }
+                        md: "0.95rem",
+                      },
                     }}
                   >
                     {page * rowsPerPage + index + 1}
@@ -382,8 +354,8 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
                     sx={{
                       fontSize: {
                         sm: "0.85rem",
-                        md: "0.95rem"
-                      }
+                        md: "0.95rem",
+                      },
                     }}
                   >
                     {expense.title}
@@ -396,8 +368,8 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
                     sx={{
                       fontSize: {
                         sm: "0.85rem",
-                        md: "0.95rem"
-                      }
+                        md: "0.95rem",
+                      },
                     }}
                   >
                     {expense.category?.name}
@@ -412,7 +384,7 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
 
                         px: {
                           sm: 1.5,
-                          md: 2
+                          md: 2,
                         },
 
                         py: 0.5,
@@ -421,20 +393,19 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
 
                         backgroundColor: "#d1f9d5ff",
 
-                        color:
-                          theme.palette.text.primary,
+                        color: theme.palette.text.primary,
 
                         fontWeight: 700,
 
                         fontSize: {
                           sm: "0.85rem",
-                          md: "0.95rem"
+                          md: "0.95rem",
                         },
 
                         minWidth: {
                           sm: 70,
-                          md: 90
-                        }
+                          md: 90,
+                        },
                       }}
                     >
                       ₹ {expense.amount}
@@ -448,10 +419,10 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
                     sx={{
                       fontSize: {
                         sm: "0.85rem",
-                        md: "0.95rem"
+                        md: "0.95rem",
                       },
 
-                      whiteSpace: "nowrap"
+                      whiteSpace: "nowrap",
                     }}
                   >
                     {expense.date}
@@ -463,7 +434,7 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
                     <Stack
                       direction={{
                         sm: "column",
-                        md: "row"
+                        md: "row",
                       }}
                       spacing={1}
                       justifyContent="center"
@@ -483,8 +454,8 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
 
                           minWidth: {
                             sm: 90,
-                            md: 70
-                          }
+                            md: 70,
+                          },
                         }}
                         onClick={() => onEdit(expense)}
                       >
@@ -505,12 +476,10 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
 
                           minWidth: {
                             sm: 90,
-                            md: 70
-                          }
+                            md: 70,
+                          },
                         }}
-                        onClick={() =>
-                          onDelete(expense.id)
-                        }
+                        onClick={() => onDelete(expense.id)}
                       >
                         Delete
                       </Button>
@@ -529,9 +498,7 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={
-              handleChangeRowsPerPage
-            }
+            onRowsPerPageChange={handleChangeRowsPerPage}
             rowsPerPageOptions={[5, 10, 25]}
           />
         </TableContainer>

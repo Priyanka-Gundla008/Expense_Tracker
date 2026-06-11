@@ -7,7 +7,7 @@ import {
   Popover,
   Button,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HandshakeIcon from "@mui/icons-material/Handshake";
@@ -74,7 +74,7 @@ export default function Header({ toggleSidebar }) {
         py: { xs: 1, sm: 1.2, md: 1.5 },
         backgroundColor: theme.palette.background.primary,
         color: theme.palette.text.primary,
-        boxShadow: 1
+        boxShadow: 1,
       }}
     >
       {/* LEFT SECTION */}
@@ -84,7 +84,7 @@ export default function Header({ toggleSidebar }) {
           alignItems: "center",
           gap: { xs: 1, sm: 2 },
           flex: 1,
-          minWidth: 0
+          minWidth: 0,
         }}
       >
         {/* Sidebar menu button (mobile + tablet) */}
@@ -104,7 +104,7 @@ export default function Header({ toggleSidebar }) {
             gap: 1,
             overflow: "hidden",
             textOverflow: "ellipsis",
-            whiteSpace: "nowrap"
+            whiteSpace: "nowrap",
           }}
         >
           {isMobile ? "Welcome" : `Welcome, ${user?.name}`}
@@ -112,7 +112,7 @@ export default function Header({ toggleSidebar }) {
           <HandshakeIcon
             sx={{
               fontSize: { xs: 18, sm: 20, md: 22 },
-              color: theme.palette.primary.main
+              color: theme.palette.primary.main,
             }}
           />
         </Typography>
@@ -123,7 +123,7 @@ export default function Header({ toggleSidebar }) {
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: { xs: 1, sm: 2 }
+          gap: { xs: 1, sm: 2 },
         }}
       >
         {/* Avatar */}
@@ -133,7 +133,7 @@ export default function Header({ toggleSidebar }) {
             sx={{
               width: { xs: 32, sm: 36, md: 40 },
               height: { xs: 32, sm: 36, md: 40 },
-              bgcolor: theme.palette.primary.main
+              bgcolor: theme.palette.primary.main,
             }}
           >
             {!user?.profileImage && user?.name?.charAt(0)?.toUpperCase()}
@@ -154,7 +154,7 @@ export default function Header({ toggleSidebar }) {
               display: "flex",
               flexDirection: "column",
               gap: 1.5,
-              minWidth: { xs: 160, sm: 200 }
+              minWidth: { xs: 160, sm: 200 },
             }}
           >
             <Typography fontWeight={600}>{user?.name}</Typography>
@@ -175,7 +175,12 @@ export default function Header({ toggleSidebar }) {
               Edit Profile
             </Button>
 
-            <Button size="small" color="error" variant="outlined" onClick={logout}>
+            <Button
+              size="small"
+              color="error"
+              variant="outlined"
+              onClick={logout}
+            >
               Logout
             </Button>
           </Box>

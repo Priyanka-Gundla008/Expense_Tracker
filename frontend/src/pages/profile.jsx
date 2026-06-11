@@ -28,8 +28,11 @@ import BusinessIcon from "@mui/icons-material/Business";
 import WorkIcon from "@mui/icons-material/Work";
 import HomeIcon from "@mui/icons-material/Home";
 import ApartmentIcon from "@mui/icons-material/Apartment";
-import { getUserById, updateUser, changePassword } from "../services/userService";
-
+import {
+  getUserById,
+  updateUser,
+  changePassword,
+} from "../services/userService";
 
 export default function Profile() {
   const theme = useTheme();
@@ -40,15 +43,11 @@ export default function Profile() {
   // const mode = params.get("mode");
   // const isEditMode = mode === "edit";
 
-
-
-
   const [tab, setTab] = useState(0);
   const [user, setUser] = useState({});
   const [editing, setEditing] = useState("");
   const [profileImagePreview, setProfileImagePreview] = useState(null); // for UI
   const [profileImageFile, setProfileImageFile] = useState(null); // for backend
-
 
   const [showPass, setShowPass] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
@@ -67,7 +66,6 @@ export default function Profile() {
     setEditing(mode === "edit");
   }, [location.search]);
 
-
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -82,7 +80,9 @@ export default function Profile() {
     } else if (passwordForm.newPassword.length < 8) {
       errors.newPassword = "Password must be at least 8 characters";
     } else if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(passwordForm.newPassword)
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(
+        passwordForm.newPassword,
+      )
     ) {
       errors.newPassword =
         "Must include uppercase, lowercase, number & special character";
@@ -98,7 +98,6 @@ export default function Profile() {
 
     return Object.keys(errors).length === 0;
   };
-
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -126,9 +125,7 @@ export default function Profile() {
     if (passwordErrors[field]) {
       setPasswordErrors({ ...passwordErrors, [field]: "" });
     }
-
   };
-
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -137,7 +134,6 @@ export default function Profile() {
     setProfileImageFile(file); // store actual File for upload
     setProfileImagePreview(URL.createObjectURL(file)); // preview in Avatar
   };
-
 
   const handleSave = async () => {
     try {
@@ -156,7 +152,7 @@ export default function Profile() {
       formData.append("json", JSON.stringify(payload));
 
       // use the actual File object
-      console.log("profileImageFile", profileImageFile)
+      console.log("profileImageFile", profileImageFile);
       if (profileImageFile) {
         formData.append("file", profileImageFile);
       }
@@ -173,7 +169,6 @@ export default function Profile() {
 
       setEditing(false);
       navigate("/profile?mode=view");
-
     } catch (err) {
       setNotification({
         open: true,
@@ -217,7 +212,6 @@ export default function Profile() {
         newPassword: "",
         confirmPassword: "",
       });
-
     } catch (err) {
       setNotification({
         open: true,
@@ -227,179 +221,184 @@ export default function Profile() {
     }
   };
 
-
-
   return (
-   <Box
-  sx={{
-    minHeight: "90vh",
-    p: {
-      xs: 2,
-      sm: 3,
-      md: 4,
-      lg: 4,
-      xl: 5,
-    },
-    background: theme.palette.background.default,
-  }}
->
+    <Box
+      sx={{
+        minHeight: "90vh",
+        p: {
+          xs: 2,
+          sm: 3,
+          md: 4,
+          lg: 4,
+          xl: 5,
+        },
+        background: theme.palette.background.default,
+      }}
+    >
       {/* Title */}
       <Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
         My Profile
       </Typography>
 
       {/* Tabs */}
-     <Box
-  sx={{
-    display: "flex",
-    justifyContent: "center",
-    mb: {
-      xs: 3,
-      sm: 4,
-      md: 5,
-      lg: 6,
-      xl: 5,
-    },
-  }}
->
-  <Tabs
-    value={tab}
-    onChange={(e, v) => setTab(v)}
-    variant="scrollable"
-    scrollButtons="auto"
-    sx={{
-      "& .MuiTabs-indicator": {
-        backgroundColor: theme.palette.primary.main,
-      },
-    }}
-  >
-    <Tab label="Personal Details" />
-    {editing && <Tab label="Change Password" />}
-  </Tabs>
-</Box>
-
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mb: {
+            xs: 3,
+            sm: 4,
+            md: 5,
+            lg: 6,
+            xl: 5,
+          },
+        }}
+      >
+        <Tabs
+          value={tab}
+          onChange={(e, v) => setTab(v)}
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{
+            "& .MuiTabs-indicator": {
+              backgroundColor: theme.palette.primary.main,
+            },
+          }}
+        >
+          <Tab label="Personal Details" />
+          {editing && <Tab label="Change Password" />}
+        </Tabs>
+      </Box>
 
       {/* Main Card */}
-<Box
-  sx={{
-    display: "flex",
-    flexDirection: {
-      xs: "column",
-      sm: "column",
-      md: "column",
-      lg: "row",
-      xl: "row",
-    },
-    gap: {
-      xs: 3,
-      sm: 4,
-      md: 4,
-      lg: 5,
-      xl: 6,
-    },
-    alignItems: {
-      xs: "center",
-      sm: "center",
-      md: "center",
-      lg: "flex-start",
-      xl: "flex-start",
-    },
-  }}
->        {/* LEFT AVATAR PANEL */}
-<Box
-  sx={{
-    width: {
-      xs: "100%",
-      sm: "100%",
-      md: "100%",
-      lg: 280,
-      xl: 320,
-    },
-    textAlign: "center",
-    position: {
-      xs: "static",
-      sm: "static",
-      md: "static",
-      lg: "sticky",
-      xl: "sticky",
-    },
-    top: 120,
-    mt: {
-      xs: 0,
-      sm: 1,
-      md: 2,
-      lg: 3,
-      xl: 3,
-    },
-  }}
->          <Box sx={{ position: "relative", display: "inline-block", }} >
-<Avatar
-  src={profileImagePreview || user.profileImage}
-  sx={{
-    width: {
-      xs: 120,
-      sm: 150,
-      md: 180,
-      lg: 220,
-      xl: 240,
-    },
-    height: {
-      xs: 120,
-      sm: 150,
-      md: 180,
-      lg: 220,
-      xl: 240,
-    },
-    fontSize: {
-      xs: 30,
-      sm: 36,
-      md: 40,
-      lg: 48,
-      xl: 52,
-    },
-    mx: "auto",
-  }}
->
-  {!profileImagePreview && user.profileImage}
-</Avatar>              
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: {
+            xs: "column",
+            sm: "column",
+            md: "column",
+            lg: "row",
+            xl: "row",
+          },
+          gap: {
+            xs: 3,
+            sm: 4,
+            md: 4,
+            lg: 5,
+            xl: 6,
+          },
+          alignItems: {
+            xs: "center",
+            sm: "center",
+            md: "center",
+            lg: "flex-start",
+            xl: "flex-start",
+          },
+        }}
+      >
+        {/* AVATAR PANEL */}
+        <Box
+          sx={{
+            width: {
+              xs: "100%",
+              sm: "100%",
+              md: "100%",
+              lg: 280,
+              xl: 320,
+            },
+            textAlign: "center",
+            position: {
+              xs: "static",
+              sm: "static",
+              md: "static",
+              lg: "sticky",
+              xl: "sticky",
+            },
+            top: 120,
+            mt: {
+              xs: 0,
+              sm: 1,
+              md: 2,
+              lg: 3,
+              xl: 3,
+            },
+          }}
+        >
+          {" "}
+          <Box sx={{ position: "relative", display: "inline-block" }}>
+            <Avatar
+              src={profileImagePreview || user.profileImage}
+              sx={{
+                width: {
+                  xs: 120,
+                  sm: 150,
+                  md: 180,
+                  lg: 220,
+                  xl: 240,
+                },
+                height: {
+                  xs: 120,
+                  sm: 150,
+                  md: 180,
+                  lg: 220,
+                  xl: 240,
+                },
+                fontSize: {
+                  xs: 30,
+                  sm: 36,
+                  md: 40,
+                  lg: 48,
+                  xl: 52,
+                },
+                mx: "auto",
+              }}
+            >
+              {!profileImagePreview && user.profileImage}
+            </Avatar>
 
             {editing && (
-             <IconButton
-  component="label"
-  sx={{
-    position: "absolute",
-    bottom: 0,
-    right: {
-      xs: 10,
-      sm: 20,
-      md: 25,
-      lg: 25,
-      xl: 30,
-    },
-    backgroundColor: theme.palette.secondary.main,
-    color: "#fff",
-  }}
->
+              <IconButton
+                component="label"
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  right: {
+                    xs: 10,
+                    sm: 20,
+                    md: 25,
+                    lg: 25,
+                    xl: 30,
+                  },
+                  backgroundColor: theme.palette.secondary.main,
+                  color: "#fff",
+                }}
+              >
                 <PhotoCamera fontSize="small" />
-                <input hidden type="file" accept="image/*" onChange={handleImageUpload} />
+                <input
+                  hidden
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
               </IconButton>
             )}
-
           </Box>
-
-<Typography
-  sx={{
-    mt: 2,
-    fontWeight: 600,
-    fontSize: {
-      xs: "0.9rem",
-      sm: "1rem",
-      md: "1rem",
-      lg: "1.05rem",
-      xl: "1.1rem",
-    },
-  }}
->            Username:{" "}
+          <Typography
+            sx={{
+              mt: 2,
+              fontWeight: 600,
+              fontSize: {
+                xs: "0.9rem",
+                sm: "1rem",
+                md: "1rem",
+                lg: "1.05rem",
+                xl: "1.1rem",
+              },
+            }}
+          >
+            {" "}
+            Username:{" "}
             <Box component="span" sx={{ color: "primary.main" }}>
               {user?.name}
             </Box>
@@ -407,44 +406,45 @@ export default function Profile() {
         </Box>
 
         {/* RIGHT CARD */}
-      <Card
-  sx={{
-    flex: 1,
-    width: "100%",
-    maxWidth: {
-      xs: "80%",
-      sm: "80%",
-      md: 600,
-      lg: 400,
-      xl: 630,
-    },
-    ml: 0,
-    borderRadius: 3,
-    boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
-    backgroundColor: theme.palette.background.paper,
-    p: {
-      xs: 1,
-      sm: 2,
-      md: 2,
-      lg: 3,
-      xl: 3,
-    },
-    pt: {
-      xs: 2,
-      sm: 3,
-      md: 4,
-      lg: 5,
-      xl: 5,
-    },
-  }}
->
+        <Card
+          sx={{
+            flex: 1,
+            width: "100%",
+            maxWidth: {
+              xs: "80%",
+              sm: "80%",
+              md: 600,
+              lg: 400,
+              xl: 630,
+            },
+            ml: 0,
+            borderRadius: 3,
+            boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
+            backgroundColor: theme.palette.background.paper,
+            p: {
+              xs: 1,
+              sm: 2,
+              md: 2,
+              lg: 3,
+              xl: 3,
+            },
+            pt: {
+              xs: 2,
+              sm: 3,
+              md: 4,
+              lg: 5,
+              xl: 5,
+            },
+          }}
+        >
           <CardContent>
-
             {/* Tab Content in Same Card */}
             {tab === 0 ? (
-<Grid container spacing={{ xs: 2, sm: 2, md: 3, lg: 3, xl: 4 }}>                {/* Row 1 */}
-<Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                   <TextField
+              <Grid container spacing={{ xs: 2, sm: 2, md: 3, lg: 3, xl: 4 }}>
+                {" "}
+                {/* Row 1 */}
+                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                  <TextField
                     label="Name"
                     value={user?.name || ""}
                     onChange={handleChange("name")}
@@ -477,10 +477,9 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-
                 {/* Row 2 */}
-<Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                       <TextField
+                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                  <TextField
                     label="Email"
                     value={user?.email || ""}
                     disabled
@@ -495,8 +494,8 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-               <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                 <TextField
+                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                  <TextField
                     label="Address"
                     value={user?.address || ""}
                     onChange={handleChange("address")}
@@ -512,7 +511,6 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-
                 {/* Row 3 */}
                 <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                   <TextField
@@ -532,7 +530,7 @@ export default function Profile() {
                   />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                   <TextField
+                  <TextField
                     label="Company"
                     value={user?.company || ""}
                     onChange={handleChange("company")}
@@ -548,7 +546,6 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-
                 {/* Row 4 */}
                 <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                   <TextField
@@ -567,66 +564,59 @@ export default function Profile() {
                     }}
                   />
                 </Grid>
-                
                 {/* Save and Cancel Buttons */}
                 {editing && (
                   <>
                     {/* Full-width Divider */}
-                  <Grid item xs={12}>
-  <Divider />
-</Grid>
+                    <Grid item xs={12}>
+                      <Divider />
+                    </Grid>
 
                     <Grid item xs={12}>
- <Box
-  sx={{
-    display: "flex",
-    justifyContent: {
-      xs: "stretch",
-      sm: "stretch",
-      md: "flex-end",
-      lg: "flex-end",
-      xl: "flex-end",
-    },
-    mt: 3,
-    width: "100%",
-  }}
->
-    <Button
-      type="submit"
-      variant="contained"
-      onClick={handleSave}
-      sx={{
-        width: {
-          xs: "150%",
-          sm: "150%",
-          md: "auto",
-        },
-        py: 1,
-        px: 3,
-        fontWeight: 600,
-        borderRadius: "15px",
-        background: `linear-gradient(
-          135deg,
-          ${theme.palette.primary.main} 0%,
-          ${theme.palette.secondary.main} 100%
-        )`,
-        "&:hover": {
-          background: `linear-gradient(
-            135deg,
-            ${theme.palette.secondary.main} 0%,
-            ${theme.palette.primary.main} 100%
-          )`,
-        },
-      }}
-    >
-      Save Changes
-    </Button>
-  </Box>
-</Grid>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: {
+                            xs: "stretch",
+                            sm: "stretch",
+                            md: "flex-end",
+                            lg: "flex-end",
+                            xl: "flex-end",
+                          },
+                          mt: 3,
+                          width: "100%",
+                        }}
+                      >
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          onClick={handleSave}
+                          sx={{
+                            width: {
+                              xs: "150%",
+                              sm: "150%",
+                              md: "auto",
+                            },
+                            py: 1,
+                            px: 3,
+                            fontWeight: 600,
+                            borderRadius: "15px",
+                            background: `linear-gradient(
+                                        135deg,
+                                        ${theme.palette.primary.main} 0%,
+                                        ${theme.palette.secondary.main} 100%
+                                        )`,
+                            "&:hover": {
+                              background: `linear-gradient(135deg,${theme.palette.secondary.main} 0%,${theme.palette.primary.main} 100%)`,
+                            },
+                          }}
+                        >
+                          Save Changes
+                        </Button>
+                      </Box>
+                    </Grid>
                   </>
                 )}
-
-
               </Grid>
             ) : (
               <Box>
@@ -677,7 +667,9 @@ export default function Profile() {
                     ),
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton onClick={() => setShowNewPass(!showNewPass)}>
+                        <IconButton
+                          onClick={() => setShowNewPass(!showNewPass)}
+                        >
                           {showNewPass ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                       </InputAdornment>
@@ -704,7 +696,9 @@ export default function Profile() {
                     ),
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton onClick={() => setShowConfirmPass(!showConfirmPass)}>
+                        <IconButton
+                          onClick={() => setShowConfirmPass(!showConfirmPass)}
+                        >
                           {showConfirmPass ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                       </InputAdornment>
@@ -715,21 +709,23 @@ export default function Profile() {
                 {/* <Box sx={{ width: "100%" }}> */}
                 <Divider sx={{ mt: 1 }} />
                 {/* </Box> */}
-<Box
-  sx={{
-    display: "flex",
-    flexDirection: {
-      xs: "column",
-      sm: "column",
-      md: "row",
-      lg: "row",
-      xl: "row",
-    },
-    justifyContent: "flex-end",
-    gap: 2,
-    mt: 3,
-  }}
->                  {/* Cancel Button */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: {
+                      xs: "column",
+                      sm: "column",
+                      md: "row",
+                      lg: "row",
+                      xl: "row",
+                    },
+                    justifyContent: "flex-end",
+                    gap: 2,
+                    mt: 3,
+                  }}
+                >
+                  {" "}
+                  {/* Cancel Button */}
                   <Button
                     onClick={() => {
                       setPasswordForm({
@@ -743,28 +739,24 @@ export default function Profile() {
                   >
                     Cancel
                   </Button>
-
                   {/* Update Password Button */}
-                 <Button
-  variant="contained"
-  sx={{
-    width: {
-      xs: "100%",
-      sm: "100%",
-      md: "auto",
-    },
-    py: 1.5,
-    px: 3,
-    borderRadius: "15px",
-  }}
->
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: {
+                        xs: "100%",
+                        sm: "100%",
+                        md: "auto",
+                      },
+                      py: 1.5,
+                      px: 3,
+                      borderRadius: "15px",
+                    }}
+                  >
                     Update Password
                   </Button>
                 </Box>
-
-
               </Box>
-
             )}
           </CardContent>
         </Card>

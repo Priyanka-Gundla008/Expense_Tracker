@@ -19,19 +19,17 @@ function AppRouter() {
   return (
     <Router>
       <Routes>
-        {/* Public Routes (NO Sidebar / Header) */}
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-                   <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
 
-        {/* Protected Routes (WITH Sidebar & Header) */}
         <Route
           element={isAuthenticated() ? <Layout /> : <Navigate to="/login" />}
         >
         <Route path="/email-confirmation" element={<PasswordResetConfirmation />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/expenses" element={<ExpensePage />} />
           <Route path="/category" element={<Category />} />
@@ -39,7 +37,6 @@ function AppRouter() {
 
         </Route>
 
-        {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

@@ -15,21 +15,27 @@ import BusinessIcon from "@mui/icons-material/Business";
 import WorkIcon from "@mui/icons-material/Work";
 import HomeIcon from "@mui/icons-material/Home";
 
-export default function PersonalDetailsTab({ user, editing, onChange, onSave, onCancel }) {
+export default function PersonalDetailsTab({
+  user,
+  editing,
+  onChange,
+  onSave,
+  onCancel,
+}) {
   const theme = useTheme();
 
   return (
-<Box
-  sx={{
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    gap: 3,
-  }}
->
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: 3,
+      }}
+    >
       {/* Name */}
       {/* <Grid item xs={12} sm={6} md={6} lg={6} xl={6}> */}
       <Box>
-         <TextField
+        <TextField
           label="Name"
           value={user?.name || ""}
           onChange={onChange("name")}
@@ -45,7 +51,6 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
           }}
         />
       </Box>
-       
 
       {/* Mobile */}
       {/* <Grid item xs={12} sm={6} md={6} lg={6} xl={6}> */}
@@ -65,12 +70,12 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
             ),
           }}
         />
-        </Box>
+      </Box>
       {/* </Grid> */}
 
       {/* Email */}
       {/* <Grid item xs={12} sm={6} md={6} lg={6} xl={6}> */}
-        <Box>
+      <Box>
         <TextField
           label="Email"
           value={user?.email || ""}
@@ -85,7 +90,7 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
             ),
           }}
         />
-        </Box>
+      </Box>
       {/* </Grid> */}
 
       {/* Address */}
@@ -106,12 +111,12 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
             ),
           }}
         />
-        </Box>
+      </Box>
       {/* </Grid> */}
 
       {/* Designation */}
       {/* <Grid item xs={12} sm={6} md={6} lg={6} xl={6}> */}
-        <Box>
+      <Box>
         <TextField
           label="Designation"
           value={user?.designation || ""}
@@ -130,7 +135,7 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
       </Box>
       {/* Company */}
       {/* <Grid item xs={12} sm={6} md={6} lg={6} xl={6}> */}
-        <Box>
+      <Box>
         <TextField
           label="Company"
           value={user?.company || ""}
@@ -146,63 +151,62 @@ export default function PersonalDetailsTab({ user, editing, onChange, onSave, on
             ),
           }}
         />
-     </Box>
+      </Box>
       {/* Divider — always visible */}
 
       {/* Save Changes + Cancel — only in edit mode */}
-  {editing && (
-  <>
-    <Divider sx={{ gridColumn: "1 / -1", width: "100%" }} />
+      {editing && (
+        <>
+          <Divider sx={{ gridColumn: "1 / -1", width: "100%" }} />
 
-    <Box
-      sx={{
-        gridColumn: "1 / -1",
-        width: "100%",
-        display: "flex",
-        flexDirection: {
-          xs: "column",
-          sm: "row",
-          md: "row",
-          lg: "row",
-          xl: "row",
-        },
-        justifyContent: "flex-end",
-        alignItems: "center",
-        gap: 2,
-      }}
-    >
-      <Button
-        onClick={onCancel}
-        sx={{
-          py: 1,
-          px: 3,
-          borderRadius: "15px",
-        }}
-      >
-        Cancel
-      </Button>
+          <Box
+            sx={{
+              gridColumn: "1 / -1",
+              width: "100%",
+              display: "flex",
+              flexDirection: {
+                xs: "column",
+                sm: "row",
+                md: "row",
+                lg: "row",
+                xl: "row",
+              },
+              justifyContent: "flex-end",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Button
+              onClick={onCancel}
+              sx={{
+                py: 1,
+                px: 3,
+                borderRadius: "15px",
+              }}
+            >
+              Cancel
+            </Button>
 
-      <Button
-        type="submit"
-        variant="contained"
-        onClick={onSave}
-        sx={{
-          py: 1,
-          px: 3,
-          width: { xs: "100%", sm: "auto", md: "auto" },
-          borderRadius: "15px",
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-          "&:hover": {
-            background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
-          },
-        }}
-      >
-        Save Changes
-      </Button>
-    </Box>
-  </>
-)}
-
+            <Button
+              type="submit"
+              variant="contained"
+              onClick={onSave}
+              sx={{
+                py: 1,
+                px: 3,
+                width: { xs: "100%", sm: "auto", md: "auto" },
+                borderRadius: "15px",
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+                "&:hover": {
+                  background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
+                },
+              }}
+            >
+              Save Changes
+            </Button>
+          </Box>
+        </>
+      )}
     </Box>
   );
 }

@@ -16,13 +16,24 @@ import EditIcon from "@mui/icons-material/Edit";
 import CategoryIcon from "@mui/icons-material/Category";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import TitleIcon from '@mui/icons-material/Title';
-import { createExpense, getExpenseById, updateExpense } from "../../services/expenseService";
+import TitleIcon from "@mui/icons-material/Title";
+import {
+  createExpense,
+  getExpenseById,
+  updateExpense,
+} from "../../services/expenseService";
 import { getCategories } from "../../services/categoryService";
 
 // const categories = ["Food", "Bills", "Travel", "Shopping", "Other"];
 
-function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMonthExpense }) {
+function ExpenseForm({
+  open,
+  onClose,
+  expense,
+  onSuccess,
+  expenseId,
+  currentMonthExpense,
+}) {
   const theme = useTheme();
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
@@ -58,7 +69,6 @@ function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMont
     fetchCategories();
   }, []);
 
-
   const resetForm = () => {
     setFormData({
       title: "",
@@ -74,7 +84,6 @@ function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMont
       date: "",
     });
   };
-
 
   const validate = () => {
     let valid = true;
@@ -115,8 +124,6 @@ function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMont
     return valid;
   };
 
-
-
   useEffect(() => {
     if (!expenseId || !open) {
       resetForm();
@@ -132,7 +139,6 @@ function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMont
           return `${year}-${month}-${day}`;
         };
 
-
         setFormData({
           title: response.data.title || "",
           category: response.data.category?.id || "",
@@ -146,8 +152,6 @@ function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMont
 
     fetchExpense();
   }, [expenseId, open]);
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -163,21 +167,15 @@ function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMont
     }));
   };
 
-
-
-
   const handleSave = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     try {
       const formatDate = (date) => {
-
         const [year, month, day] = date.split("-");
         return `${day}-${month}-${year}`;
       };
-
-
 
       if (expenseId) {
         const expenseData = {
@@ -185,7 +183,7 @@ function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMont
           category: formData.category,
           amount: parseFloat(formData.amount),
           date: formatDate(formData.date),
-        }
+        };
         await updateExpense(expenseId, expenseData);
       } else {
         const expenseData = {
@@ -193,7 +191,7 @@ function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMont
           categoryId: formData.category,
           amount: parseFloat(formData.amount),
           date: formatDate(formData.date),
-        }
+        };
         await createExpense(expenseData);
       }
       onSuccess(); // triggers GET API in parent
@@ -312,12 +310,15 @@ function ExpenseForm({ open, onClose, expense, onSuccess, expenseId, currentMont
 
       <Divider />
 
-
       <DialogActions sx={{ px: 3, pb: 3, gap: 2 }}>
-        <Button onClick={() => {
-          resetForm();
-          onClose();
-        }}>Cancel</Button>
+        <Button
+          onClick={() => {
+            resetForm();
+            onClose();
+          }}
+        >
+          Cancel
+        </Button>
         <Button
           type="submit"
           variant="contained"

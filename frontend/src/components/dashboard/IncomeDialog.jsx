@@ -8,17 +8,11 @@ import {
   Button,
   TextField,
   InputAdornment,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
-function IncomeDialog({
-  open,
-  onClose,
-  incomeValue,
-  setIncomeValue,
-  onSave,
-}) {
+function IncomeDialog({ open, onClose, incomeValue, setIncomeValue, onSave }) {
   const theme = useTheme();
   const [error, setError] = useState("");
 
@@ -51,7 +45,7 @@ function IncomeDialog({
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle
         color="text.color"
-        sx={{ display: "flex", alignItems: "center", gap: 1, pt:3 }}
+        sx={{ display: "flex", alignItems: "center", gap: 1, pt: 3 }}
       >
         Add / Update Total Income
       </DialogTitle>
@@ -76,11 +70,9 @@ function IncomeDialog({
             sx: { borderRadius: "15px" },
           }}
         />
-
       </DialogContent>
 
       <DialogActions sx={{ px: 3, pb: 3, gap: 2 }}>
-
         <Button onClick={onClose}>Cancel</Button>
         <Button
           type="submit"

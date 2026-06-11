@@ -15,14 +15,20 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { Visibility, VisibilityOff, AccountCircle, Lock, Email, Work } from "@mui/icons-material";
+import {
+  Visibility,
+  VisibilityOff,
+  AccountCircle,
+  Lock,
+  Email,
+  Work,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import TermsDialog from "../TermsAndConditions";
 import { createUser } from "../../services/userService";
 import { googleLogin } from "../../services/authService";
-import { GoogleLogin } from '@react-oauth/google';
-import { useGoogleLogin } from '@react-oauth/google';
-
+import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 
 function Signup() {
   const theme = useTheme();
@@ -57,22 +63,28 @@ function Signup() {
   const validators = {
     name: (value) => {
       if (!value.trim()) return "Full Name is required";
-      if (!/^[A-Za-z ]+$/.test(value)) return "Name can contain only letters and spaces";
-      if (value.trim().length < 3 || value.trim().length > 50) return "Name must be 3-50 characters";
+      if (!/^[A-Za-z ]+$/.test(value))
+        return "Name can contain only letters and spaces";
+      if (value.trim().length < 3 || value.trim().length > 50)
+        return "Name must be 3-50 characters";
       return "";
     },
     email: (value) => {
       if (!value.trim()) return "Email is required";
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email format";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+        return "Invalid email format";
       return "";
     },
     password: (value) => {
       if (!value) return "Password is required";
       if (value.length < 8) return "Password must be at least 8 characters";
-      if (!/(?=.*[a-z])/.test(value)) return "Password must contain a lowercase letter";
-      if (!/(?=.*[A-Z])/.test(value)) return "Password must contain an uppercase letter";
+      if (!/(?=.*[a-z])/.test(value))
+        return "Password must contain a lowercase letter";
+      if (!/(?=.*[A-Z])/.test(value))
+        return "Password must contain an uppercase letter";
       if (!/(?=.*\d)/.test(value)) return "Password must contain a number";
-      if (!/(?=.*[@$!%*?&])/.test(value)) return "Password must contain a special character";
+      if (!/(?=.*[@$!%*?&])/.test(value))
+        return "Password must contain a special character";
       return "";
     },
     confirmPassword: (value, form) => {
@@ -96,16 +108,20 @@ function Signup() {
     // Update errors dynamically
     setErrors((prev) => ({
       ...prev,
-      [field]: field === "confirmPassword"
-        ? validators.confirmPassword(value, { ...form, [field]: value })
-        : validators[field](value),
+      [field]:
+        field === "confirmPassword"
+          ? validators.confirmPassword(value, { ...form, [field]: value })
+          : validators[field](value),
     }));
 
     // If password changes, re-validate confirmPassword
     if (field === "password" && form.confirmPassword) {
       setErrors((prev) => ({
         ...prev,
-        confirmPassword: validators.confirmPassword(form.confirmPassword, { ...form, password: value }),
+        confirmPassword: validators.confirmPassword(form.confirmPassword, {
+          ...form,
+          password: value,
+        }),
       }));
     }
   };
@@ -138,7 +154,6 @@ function Signup() {
     try {
       const res = await createUser(user);
       navigate("/login");
-
     } catch (err) {
       console.error(err);
     }
@@ -146,23 +161,20 @@ function Signup() {
 
   const handleGoogleSuccess = async (response) => {
     const idToken = response.credential;
-    console.log("idToken", idToken)
+    console.log("idToken", idToken);
     try {
       const res = await googleLogin(idToken);
 
       const { token, user } = res.data;
 
-
-      console.log("res", res.data)
+      console.log("res", res.data);
 
       localStorage.setItem("accessToken", token);
       localStorage.setItem("user", JSON.stringify(user));
 
       navigate("/dashboard");
-
     } catch (err) {
-      const message =
-        err?.response?.data?.message || "Google login failed";
+      const message = err?.response?.data?.message || "Google login failed";
 
       setNotification({
         open: true,
@@ -174,68 +186,73 @@ function Signup() {
 
   // -------------------- Render --------------------
   return (
-<Box
-  sx={{
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: theme.palette.background.default,
-    px: {
-      xs: 2,
-      sm: 3,
-      md: 4,
-    },
-    // overflow: "hidden",
-  }}
->
-<Card
-  sx={{
-    p: {
-      xs: 1.5,
-      sm: 2,
-    },
-    width: "100%",
-    maxWidth: {
-      xs: 380,
-      sm: 450,
-      md: 500,
-    },
-    borderRadius: {
-      xs: 2,
-      sm: 3,
-    },
-    boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
-    backgroundColor: theme.palette.background.paper,
-  }}
->        <CardContent>
-<Typography
-  sx={{
-    mb: 0.5,
-    fontWeight: 700,
-    textAlign: "center",
-    color: theme.palette.primary.main,
-    fontSize: {
-      xs: "1.7rem",
-      sm: "2rem",
-      md: "2.2rem",
-    },
-  }}
->            Create Account
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: theme.palette.background.default,
+        px: {
+          xs: 2,
+          sm: 3,
+          md: 4,
+        },
+        // overflow: "hidden",
+      }}
+    >
+      <Card
+        sx={{
+          p: {
+            xs: 1.5,
+            sm: 2,
+          },
+          width: "100%",
+          maxWidth: {
+            xs: 380,
+            sm: 450,
+            md: 500,
+          },
+          borderRadius: {
+            xs: 2,
+            sm: 3,
+          },
+          boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
+          backgroundColor: theme.palette.background.paper,
+        }}
+      >
+        {" "}
+        <CardContent>
+          <Typography
+            sx={{
+              mb: 0.5,
+              fontWeight: 700,
+              textAlign: "center",
+              color: theme.palette.primary.main,
+              fontSize: {
+                xs: "1.7rem",
+                sm: "2rem",
+                md: "2.2rem",
+              },
+            }}
+          >
+            {" "}
+            Create Account
           </Typography>
-<Typography
-  sx={{
-    mb: 2,
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    fontSize: {
-      xs: "0.85rem",
-      sm: "0.9rem",
-    },
-  }}
->            Sign up to start tracking your expenses
+          <Typography
+            sx={{
+              mb: 2,
+              textAlign: "center",
+              color: theme.palette.text.secondary,
+              fontSize: {
+                xs: "0.85rem",
+                sm: "0.9rem",
+              },
+            }}
+          >
+            {" "}
+            Sign up to start tracking your expenses
           </Typography>
-          
 
           <form onSubmit={handleSubmit}>
             {/* Full Name */}
@@ -247,17 +264,23 @@ function Signup() {
               onChange={handleChange("name")}
               helperText={errors.name}
               FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
-              InputProps={{ startAdornment: <InputAdornment position="start"><AccountCircle /></InputAdornment>, }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircle />
+                  </InputAdornment>
+                ),
+              }}
               sx={{
-  "& .MuiInputBase-root": {
-    borderRadius: "15px",
-    fontSize: {
-      xs: "0.9rem",
-      sm: "1rem",
-    },
-  },
-}}
-  />
+                "& .MuiInputBase-root": {
+                  borderRadius: "15px",
+                  fontSize: {
+                    xs: "0.9rem",
+                    sm: "1rem",
+                  },
+                },
+              }}
+            />
 
             {/* Email */}
             <TextField
@@ -269,16 +292,22 @@ function Signup() {
               onChange={handleChange("email")}
               helperText={errors.email}
               FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
-              InputProps={{ startAdornment: <InputAdornment position="start"><Email /></InputAdornment>,  }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Email />
+                  </InputAdornment>
+                ),
+              }}
               sx={{
-  "& .MuiInputBase-root": {
-    borderRadius: "15px",
-    fontSize: {
-      xs: "0.9rem",
-      sm: "1rem",
-    },
-  },
-}}
+                "& .MuiInputBase-root": {
+                  borderRadius: "15px",
+                  fontSize: {
+                    xs: "0.9rem",
+                    sm: "1rem",
+                  },
+                },
+              }}
             />
 
             {/* Password */}
@@ -292,18 +321,28 @@ function Signup() {
               helperText={errors.password}
               FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
               InputProps={{
-                startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
-                endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowPassword(!showPassword)}>{showPassword ? <Visibility /> : <VisibilityOff />}</IconButton></InputAdornment>,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
               sx={{
-  "& .MuiInputBase-root": {
-    borderRadius: "15px",
-    fontSize: {
-      xs: "0.9rem",
-      sm: "1rem",
-    },
-  },
-}}
+                "& .MuiInputBase-root": {
+                  borderRadius: "15px",
+                  fontSize: {
+                    xs: "0.9rem",
+                    sm: "1rem",
+                  },
+                },
+              }}
             />
 
             {/* Confirm Password */}
@@ -317,95 +356,104 @@ function Signup() {
               helperText={errors.confirmPassword}
               FormHelperTextProps={{ sx: { color: "error.main", ml: 0 } }}
               InputProps={{
-                startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
-                endAdornment: <InputAdornment position="end"><IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>{showConfirmPassword ? <Visibility /> : <VisibilityOff />}</IconButton></InputAdornment>,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
               sx={{
-  "& .MuiInputBase-root": {
-    borderRadius: "15px",
-    fontSize: {
-      xs: "0.9rem",
-      sm: "1rem",
-    },
-  },
-}}
+                "& .MuiInputBase-root": {
+                  borderRadius: "15px",
+                  fontSize: {
+                    xs: "0.9rem",
+                    sm: "1rem",
+                  },
+                },
+              }}
             />
 
             {/* Terms */}
-       <FormControlLabel
-  sx={{
-    mt: 1,
-    fontSize: {
-        xs: "0.75rem",
-        sm: "0.9rem",
-      },
-    // mb: 0,
-    // alignItems: "center",
-
-    // "& .MuiFormControlLabel-label": {
-    //   whiteSpace: "nowrap",
-    //   fontSize: {
-    //     xs: "0.75rem",
-    //     sm: "0.9rem",
-    //   },
-    // },
-
-    // "& .MuiCheckbox-root": {
-    //   pt: 0,
-    // },
-  }}
-  control={
-    <Checkbox
-      checked={form.agree}
-      onChange={handleChange("agree")}
-      size="small"
-    />
-  }
-  label={
+            <FormControlLabel
+              sx={{
+                mt: 1,
+                fontSize: {
+                  xs: "0.75rem",
+                  sm: "0.9rem",
+                },
+              }}
+              control={
+                <Checkbox
+                  checked={form.agree}
+                  onChange={handleChange("agree")}
+                  size="small"
+                />
+              }
+              label={
                 <Typography variant="body2">
                   By signing up, you agree to our{" "}
                   <span
-                   style={{ 
-                    color: theme.palette.primary.main, 
-                    cursor: "pointer",
-                    fontWeight: 500,
-                   }} 
-                   onClick={() => setOpenTerms(true)}>
+                    style={{
+                      color: theme.palette.primary.main,
+                      cursor: "pointer",
+                      fontWeight: 500,
+                    }}
+                    onClick={() => setOpenTerms(true)}
+                  >
                     Terms & Conditions
                   </span>
                 </Typography>
               }
-/>
-            {errors.agree && <Typography variant="caption" color="error" sx={{ display: "block", ml: 1 }}>{errors.agree}</Typography>}
+            />
+            {errors.agree && (
+              <Typography
+                variant="caption"
+                color="error"
+                sx={{ display: "block", ml: 1 }}
+              >
+                {errors.agree}
+              </Typography>
+            )}
 
             {/* Submit */}
             <Button
-  type="submit"
-  fullWidth
-  variant="contained"
-  sx={{
-    mt: 2,
-    py: 1,
-    fontSize: {
-      xs: "0.9rem",
-      sm: "1rem",
-    },
-    borderRadius: "15px",
-    fontWeight: 600,
-    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-  }}
->
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 2,
+                py: 1,
+                fontSize: {
+                  xs: "0.9rem",
+                  sm: "1rem",
+                },
+                borderRadius: "15px",
+                fontWeight: 600,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+              }}
+            >
               Sign Up
             </Button>
           </form>
 
-        <Box
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    my: 1,
-  }}
->
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              my: 1,
+            }}
+          >
             <Box sx={{ flex: 1, height: "1px", backgroundColor: "#ccc" }} />
             <Typography sx={{ mx: 2, color: "#888", fontWeight: 500 }}>
               OR
@@ -413,39 +461,38 @@ function Signup() {
             <Box sx={{ flex: 1, height: "1px", backgroundColor: "#ccc" }} />
           </Box>
 
-         <Box
-  sx={{
-    width: "auto",
-    display: "flex",
-    justifyContent: "center",
-    mt: 0.5,
-    overflow: "hidden",
-  }}
->
-  <GoogleLogin
-    onSuccess={handleGoogleSuccess}
-    onError={() => console.log("Signup failed")}
-    text="signup_with"
-    theme="outline"
-    size="large"
-    shape="pill"
-    width={window.innerWidth < 600 ? "240" : "300"}
-  />
-</Box>
+          <Box
+            sx={{
+              width: "auto",
+              display: "flex",
+              justifyContent: "center",
+              mt: 0.5,
+              overflow: "hidden",
+            }}
+          >
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => console.log("Signup failed")}
+              text="signup_with"
+              theme="outline"
+              size="large"
+              shape="pill"
+              width={window.innerWidth < 600 ? "240" : "300"}
+            />
+          </Box>
 
-
-
-
-<Typography
-  sx={{
-    mt: 1,
-    textAlign: "center",
-    fontSize: {
-      xs: "0.85rem",
-      sm: "0.95rem",
-    },
-  }}
->            Already have an account?{" "}
+          <Typography
+            sx={{
+              mt: 1,
+              textAlign: "center",
+              fontSize: {
+                xs: "0.85rem",
+                sm: "0.95rem",
+              },
+            }}
+          >
+            {" "}
+            Already have an account?{" "}
             <Link href="/login" underline="hover">
               Login
             </Link>
@@ -457,10 +504,11 @@ function Signup() {
         open={notification.open}
         autoHideDuration={4000}
         onClose={() => setNotification({ ...notification, open: false })}
-anchorOrigin={{
-  vertical: "top",
-  horizontal: window.innerWidth < 600 ? "center" : "right",
-}}      >
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: window.innerWidth < 600 ? "center" : "right",
+        }}
+      >
         <Alert
           onClose={() => setNotification({ ...notification, open: false })}
           severity={notification.severity}

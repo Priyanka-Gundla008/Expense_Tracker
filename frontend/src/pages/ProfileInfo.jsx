@@ -14,7 +14,11 @@ import {
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useTheme } from "@mui/material/styles";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getUserById, updateUser, changePassword } from "../services/userService";
+import {
+  getUserById,
+  updateUser,
+  changePassword,
+} from "../services/userService";
 import PersonalDetailsTab from "../components/profile/PersonalDetailsTab";
 import ChangePasswordTab from "../components/profile/ChangePasswordTab";
 
@@ -110,7 +114,10 @@ export default function Profile() {
   const handleChangePassword = async ({ currentPassword, newPassword }) => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
-      const res = await changePassword(storedUser.id, { currentPassword, newPassword });
+      const res = await changePassword(storedUser.id, {
+        currentPassword,
+        newPassword,
+      });
       setNotification({
         open: true,
         message: res.message || "Password updated successfully",
@@ -166,9 +173,21 @@ export default function Profile() {
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", sm: "column", md: "column", lg: "row", xl: "row" },
+          flexDirection: {
+            xs: "column",
+            sm: "column",
+            md: "column",
+            lg: "row",
+            xl: "row",
+          },
           gap: { xs: 3, sm: 4, md: 4, lg: 5, xl: 6 },
-          alignItems: { xs: "center", sm: "center", md: "center", lg: "flex-start", xl: "flex-start" },
+          alignItems: {
+            xs: "center",
+            sm: "center",
+            md: "center",
+            lg: "flex-start",
+            xl: "flex-start",
+          },
         }}
       >
         {/* LEFT AVATAR PANEL */}
@@ -176,7 +195,13 @@ export default function Profile() {
           sx={{
             width: { xs: "100%", sm: "100%", md: "100%", lg: 280, xl: 320 },
             textAlign: "center",
-            position: { xs: "static", sm: "static", md: "static", lg: "sticky", xl: "sticky" },
+            position: {
+              xs: "static",
+              sm: "static",
+              md: "static",
+              lg: "sticky",
+              xl: "sticky",
+            },
             top: 120,
             mt: { xs: 0, sm: 1, md: 2, lg: 3, xl: 3 },
           }}
@@ -206,7 +231,12 @@ export default function Profile() {
                 }}
               >
                 <PhotoCamera fontSize="small" />
-                <input hidden type="file" accept="image/*" onChange={handleImageUpload} />
+                <input
+                  hidden
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
               </IconButton>
             )}
           </Box>
@@ -215,7 +245,13 @@ export default function Profile() {
             sx={{
               mt: 2,
               fontWeight: 600,
-              fontSize: { xs: "0.9rem", sm: "1rem", md: "1rem", lg: "1.05rem", xl: "1.1rem" },
+              fontSize: {
+                xs: "0.9rem",
+                sm: "1rem",
+                md: "1rem",
+                lg: "1.05rem",
+                xl: "1.1rem",
+              },
             }}
           >
             Username:{" "}
@@ -226,42 +262,24 @@ export default function Profile() {
         </Box>
 
         {/* RIGHT CARD */}
-       {/* <Card
-  sx={{
-    flex: 1,
-    width: "100%",
-    maxWidth: {
-      xs: "100%",
-      sm: 700,
-      md: 850,
-      lg: 950,
-      xl: 1100,
-    },
-    mx: "auto",
-    borderRadius: 3,
-    boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
-    backgroundColor: theme.palette.background.paper,
-    p: { xs: 1, sm: 2, md: 2, lg: 3, xl: 3 },
-  }}
-> */}
-    <Card
-  sx={{
-    flex: 1,
-    width: {
-      xs: "100%",
-      sm: "100%",
-      md: "90%",
-      lg: "70%",
-      xl: "60%",
-    },
-    maxWidth: 900,
-    mx: "auto",
-      borderRadius: 3,
-    boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
-    backgroundColor: theme.palette.background.paper,
-    p: { xs: 1, sm: 2, md: 2, lg: 3, xl: 3 },
-  }}
->
+        <Card
+          sx={{
+            flex: 1,
+            width: {
+              xs: "100%",
+              sm: "100%",
+              md: "90%",
+              lg: "70%",
+              xl: "60%",
+            },
+            maxWidth: 900,
+            mx: "auto",
+            borderRadius: 3,
+            boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
+            backgroundColor: theme.palette.background.paper,
+            p: { xs: 1, sm: 2, md: 2, lg: 3, xl: 3 },
+          }}
+        >
           <CardContent>
             {tab === 0 ? (
               <PersonalDetailsTab

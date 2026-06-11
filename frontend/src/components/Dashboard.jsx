@@ -25,11 +25,20 @@ function Dashboard() {
   const [openIncomeModal, setOpenIncomeModal] = useState(false);
   const [incomeValue, setIncomeValue] = useState("");
   const [summaryData, setSummaryData] = useState([
-    { title: "Total Income", value: 0, color: "#def5e0ff", textColor: "#2e7d32" },
-    { title: "Total Expenses", value: 0, color: "#f7d7dcff", textColor: "#c62828" },
+    {
+      title: "Total Income",
+      value: 0,
+      color: "#def5e0ff",
+      textColor: "#2e7d32",
+    },
+    {
+      title: "Total Expenses",
+      value: 0,
+      color: "#f7d7dcff",
+      textColor: "#c62828",
+    },
     { title: "Balance", value: 0, color: "#d3e8f7ff", textColor: "#1565c0" },
   ]);
-
 
   const now = new Date();
   const currentYear = now.getFullYear();
@@ -46,9 +55,24 @@ function Dashboard() {
       const balance = income - totalExpenses;
 
       setSummaryData([
-        { title: "Total Income", value: income, color: "#def5e0ff", textColor: "#2e7d32" },
-        { title: "Total Expenses", value: totalExpenses, color: "#f7d7dcff", textColor: "#c62828" },
-        { title: "Balance", value: balance, color: "#d3e8f7ff", textColor: "#1565c0" },
+        {
+          title: "Total Income",
+          value: income,
+          color: "#def5e0ff",
+          textColor: "#2e7d32",
+        },
+        {
+          title: "Total Expenses",
+          value: totalExpenses,
+          color: "#f7d7dcff",
+          textColor: "#c62828",
+        },
+        {
+          title: "Balance",
+          value: balance,
+          color: "#d3e8f7ff",
+          textColor: "#1565c0",
+        },
       ]);
 
       setIncomeValue(income);
@@ -79,7 +103,6 @@ function Dashboard() {
     }
   };
 
-
   const fetchRecentExpenses = async () => {
     try {
       const response = await getExpenses();
@@ -91,7 +114,7 @@ function Dashboard() {
       };
 
       const sortedExpenses = [...expenses].sort(
-        (a, b) => parseDate(b.date) - parseDate(a.date)
+        (a, b) => parseDate(b.date) - parseDate(a.date),
       );
 
       setRecentExpenses(sortedExpenses.slice(0, 4));
@@ -100,74 +123,78 @@ function Dashboard() {
     }
   };
 
-
   useEffect(() => {
     fetchRecentExpenses();
   }, []);
 
   return (
-<Box
-  sx={{
-    minHeight: "92vh",
-    p: {
-      xs: 1,
-      sm: 2,
-      md: 3,
-    },
-    background: theme.palette.background.default,
-  }}
->     <Typography
-  variant="h5"
-  fontWeight={700}
-  sx={{
-    mb: 2,
-    fontSize: {
-      xs: "1.4rem",
-      sm: "1.7rem",
-    },
-  }}
->
-  Dashboard
-</Typography>
-
+    <Box
+      sx={{
+        minHeight: "92vh",
+        p: {
+          xs: 1,
+          sm: 2,
+          md: 3,
+        },
+        background: theme.palette.background.default,
+      }}
+    >
+      {" "}
+      <Typography
+        variant="h5"
+        fontWeight={700}
+        sx={{
+          mb: 2,
+          fontSize: {
+            xs: "1.4rem",
+            sm: "1.7rem",
+          },
+        }}
+      >
+        Dashboard
+      </Typography>
       {/* Parent Card */}
-<Card
-  sx={{
-    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-    p: {
-      xs: 1,
-      sm: 2,
-    },
-    borderRadius: 3,
-  }}
->        <CardContent>
+      <Card
+        sx={{
+          boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+          p: {
+            xs: 1,
+            sm: 2,
+          },
+          borderRadius: 3,
+        }}
+      >
+        {" "}
+        <CardContent>
           {/* Top Section */}
-<Box
-  sx={{
-    display: "flex",
-    flexDirection: {
-      xs: "column",
-      lg: "row",
-    },
-    gap: {
-      xs: 3,
-      md: 4,
-      lg: 5,
-    },
-  }}
->            {/* Summary Cards */}
           <Box
-  sx={{
-    flex: 2,
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: {
-      xs: 1,
-      sm: 1.5,
-      md: 2,
-    },
-  }}
->
+            sx={{
+              display: "flex",
+              flexDirection: {
+                xs: "column",
+                lg: "row",
+              },
+              gap: {
+                xs: 3,
+                md: 4,
+                lg: 5,
+              },
+            }}
+          >
+            {" "}
+            {/* Summary Cards */}
+            <Box
+              sx={{
+                flex: 2,
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: {
+                  xs: 1,
+                  sm: 1.5,
+                  md: 2,
+                },
+              }}
+            >
               {summaryData.map((item, index) => (
                 // <Card
                 //   key={index}
@@ -179,117 +206,120 @@ function Dashboard() {
                 //     }
                 //   }}
                 // >
-          <Card
-  key={index}
-  sx={{
-    cursor: item.title === "Total Income" ? "pointer" : "default",
-    borderRadius: {
-      xs: "10px",
-      sm: "16px",
-    },
-    boxShadow: "0 6px 15px rgba(0,0,0,0.08)",
-    height: {
-      xs: 60,
-      sm: 90,
-      md: 100,
-    },
-  }}
-  onClick={() => {
-    if (item.title === "Total Income") {
-      setIncomeValue(item.value);
-      setOpenIncomeModal(true);
-    }
-  }}
->
-  <CardContent
-    sx={{
-      p: {
-        xs: 0.25,
-        sm: 0.5,
-      },
-      height: "100%",
-      "&:last-child": {
-        pb: {
-          xs: 0.25,
-          sm: 0.5,
-        },
-      },
-    }}
-  >
-    <Box
-      sx={{
-        height: "100%",
-        borderRadius: "10px",
-        background: item.color,
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        px: {
-          xs: 0.25,
-          sm: 1,
-        },
-      }}
-    >
-      <Typography
-        sx={{
-          fontSize: {
-            xs: "0.55rem",
-            sm: "0.75rem",
-            md: "0.875rem",
-          },
-          fontWeight: 700,
-          color: "text.secondary",
-          lineHeight: 1.1,
-        }}
-      >
-        {item.title}
-      </Typography>
+                <Card
+                  key={index}
+                  sx={{
+                    cursor:
+                      item.title === "Total Income" ? "pointer" : "default",
+                    borderRadius: {
+                      xs: "10px",
+                      sm: "16px",
+                    },
+                    boxShadow: "0 6px 15px rgba(0,0,0,0.08)",
+                    height: {
+                      xs: 60,
+                      sm: 90,
+                      md: 100,
+                    },
+                  }}
+                  onClick={() => {
+                    if (item.title === "Total Income") {
+                      setIncomeValue(item.value);
+                      setOpenIncomeModal(true);
+                    }
+                  }}
+                >
+                  <CardContent
+                    sx={{
+                      p: {
+                        xs: 0.25,
+                        sm: 0.5,
+                      },
+                      height: "100%",
+                      "&:last-child": {
+                        pb: {
+                          xs: 0.25,
+                          sm: 0.5,
+                        },
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        height: "100%",
+                        borderRadius: "10px",
+                        background: item.color,
+                        textAlign: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        px: {
+                          xs: 0.25,
+                          sm: 1,
+                        },
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: {
+                            xs: "0.55rem",
+                            sm: "0.75rem",
+                            md: "0.875rem",
+                          },
+                          fontWeight: 700,
+                          color: "text.secondary",
+                          lineHeight: 1.1,
+                        }}
+                      >
+                        {item.title}
+                      </Typography>
 
-      <Typography
-        sx={{
-          color: item.textColor,
-          fontWeight: 800,
-          fontSize: {
-            xs: "0.65rem",
-            sm: "0.9rem",
-            md: "1.25rem",
-          },
-          mt: 0.3,
-          whiteSpace: "nowrap",
-        }}
-      >
-        ₹ {item.value.toLocaleString("en-IN")}
-      </Typography>
-    </Box>
-  </CardContent>
-</Card>
+                      <Typography
+                        sx={{
+                          color: item.textColor,
+                          fontWeight: 800,
+                          fontSize: {
+                            xs: "0.65rem",
+                            sm: "0.9rem",
+                            md: "1.25rem",
+                          },
+                          mt: 0.3,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        ₹ {item.value.toLocaleString("en-IN")}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
               ))}
 
               {/* ===== Table After Cards ===== */}
-<Box
-  sx={{
-    mt: 2,
-    width: "100%",
-    gridColumn: "1 / -1",
-  }}
->              <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
+              <Box
+                sx={{
+                  mt: 2,
+                  width: "100%",
+                  gridColumn: "1 / -1",
+                }}
+              >
+                {" "}
+                <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
                   Recent Expenses
                 </Typography>
-
-               <TableContainer
-  component={Paper}
-  sx={{
-    borderRadius: "10px",
-    boxShadow: "0 6px 15px rgba(0,0,0,0.08)",
-    overflowX: "auto",
-    width: "100%",
-  }}
->
-<Table sx={{ minWidth: 650 }}>
-                      <TableHead>
+                <TableContainer
+                  component={Paper}
+                  sx={{
+                    borderRadius: "10px",
+                    boxShadow: "0 6px 15px rgba(0,0,0,0.08)",
+                    overflowX: "auto",
+                    width: "100%",
+                  }}
+                >
+                  <Table sx={{ minWidth: 650 }}>
+                    <TableHead>
                       <TableRow sx={{ backgroundColor: "#dedbdbff" }}>
-                        <TableCell align="center">S.No</TableCell> {/* Added Serial Number */}
+                        <TableCell align="center">S.No</TableCell>{" "}
+                        {/* Added Serial Number */}
                         <TableCell align="center">Date</TableCell>
                         <TableCell align="center">Category</TableCell>
                         <TableCell align="center">Description</TableCell>
@@ -300,9 +330,12 @@ function Dashboard() {
                     <TableBody>
                       {recentExpenses.map((row, index) => (
                         <TableRow key={index}>
-                          <TableCell align="center">{index + 1}</TableCell> {/* Serial Number */}
+                          <TableCell align="center">{index + 1}</TableCell>{" "}
+                          {/* Serial Number */}
                           <TableCell align="center">{row.date}</TableCell>
-                          <TableCell align="center">{row.category?.name}</TableCell>
+                          <TableCell align="center">
+                            {row.category?.name}
+                          </TableCell>
                           <TableCell align="center">{row.title}</TableCell>
                           <TableCell align="center">
                             <Box
@@ -327,30 +360,26 @@ function Dashboard() {
                     </TableBody>
                   </Table>
                 </TableContainer>
-
               </Box>
-
             </Box>
-
             {/* Pie Chart */}
-          <Box
-  sx={{
-    width: {
-      xs: "100%",
-      lg: "35%",
-    },
-    minHeight: {
-      xs: 350,
-      sm: 400,
-    },
-    display: "flex",
-    justifyContent: "center",
-  }}
->
-  <RechartsPie />
-</Box>
+            <Box
+              sx={{
+                width: {
+                  xs: "100%",
+                  lg: "35%",
+                },
+                minHeight: {
+                  xs: 350,
+                  sm: 400,
+                },
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <RechartsPie />
+            </Box>
           </Box>
-
 
           <Box sx={{ mt: 5 }}>
             <MonthlyExpenseLine />
@@ -363,15 +392,10 @@ function Dashboard() {
             setIncomeValue={setIncomeValue}
             onSave={handleSaveIncome}
           />
-
-
-
-
         </CardContent>
       </Card>
     </Box>
   );
 }
-
 
 export default Dashboard;

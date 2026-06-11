@@ -25,8 +25,18 @@ const allData = [
 ];
 
 const allMonths = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 function MonthlyExpenseLine() {
@@ -55,7 +65,7 @@ function MonthlyExpenseLine() {
 
   const filteredData = allMonths.map((month) => {
     const monthData = allData.find(
-      (item) => item.year === selectedYear && item.month === month
+      (item) => item.year === selectedYear && item.month === month,
     );
     return {
       month,
@@ -91,7 +101,7 @@ function MonthlyExpenseLine() {
         </FormControl>
       </Box>
 
-      {chartData.some(d => d.expense > 0) ? (
+      {chartData.some((d) => d.expense > 0) ? (
         <ResponsiveContainer width="99%" height="85%">
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -117,9 +127,7 @@ function MonthlyExpenseLine() {
             justifyContent: "center",
           }}
         >
-          <Typography color="red">
-            {message}
-          </Typography>
+          <Typography color="red">{message}</Typography>
         </Box>
       )}
     </Box>

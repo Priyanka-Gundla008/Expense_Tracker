@@ -131,13 +131,6 @@ function Category() {
 
         </Box>
       </Paper >
-
-
-
-
-
-
-
     </Box>
   );
 }

@@ -95,11 +95,7 @@ function Sidebar() {
           {!user?.profileImage && user?.name?.charAt(0).toUpperCase()}
         </Avatar>
 
-        <Typography
-          variant="subtitle1"
-          fontWeight={600}
-          color="text.primary"
-        >
+        <Typography variant="subtitle1" fontWeight={600} color="text.primary">
           {user?.name}
         </Typography>
       </Box>
@@ -107,7 +103,6 @@ function Sidebar() {
       <Divider />
 
       {/* App Name */}
-
 
       {/* Menu Items */}
       <List>

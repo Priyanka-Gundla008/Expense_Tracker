@@ -258,19 +258,16 @@ function ExpensePage() {
     <Box
       sx={{
         minHeight: "100vh",
-
         p: {
           xs: 1.5,
           sm: 2,
           md: 3
         },
-
         background:
           theme.palette.background.default
       }}
     >
       {/* PAGE TITLE */}
-
       <Typography
         variant={isMobile ? "h6" : "h5"}
         fontWeight={700}
@@ -286,16 +283,12 @@ function ExpensePage() {
       </Typography>
 
       {/* MAIN CARD */}
-
       <Card
         sx={{
           width: "100%",
-
           borderRadius: 3,
-
           backgroundColor:
             theme.palette.background.paper,
-
           p: {
             xs: 1,
             sm: 2,
@@ -305,23 +298,18 @@ function ExpensePage() {
       >
         <CardContent>
           {/* TOP SECTION */}
-
           <Grid
             container
             spacing={3}
             alignItems="stretch"
           >
             {/* TOTAL EXPENSE CARD */}
-
             <Grid item xs={12} md={4}>
               <Card
                 sx={{
                   width: "100%",
-
                   height: "100%",
-
                   borderRadius: 3,
-
                   backgroundColor:
                     theme.palette.background
                       .primary
@@ -361,33 +349,25 @@ function ExpensePage() {
             </Grid>
 
             {/* FILTERS */}
-
             <Grid item xs={12} md={8}>
               <Box
                 sx={{
                   display: "flex",
-
                   flexDirection: {
                     xs: "column",
                     sm: "row"
                   },
-
                   gap: 2,
-
                   alignItems: {
                     xs: "stretch",
                     sm: "center"
                   },
-
                   justifyContent: "flex-end",
-
                   flexWrap: "wrap",
-
                   height: "100%"
                 }}
               >
                 {/* YEAR */}
-
                 <FormControl
                   size="small"
                   sx={{
@@ -420,7 +400,6 @@ function ExpensePage() {
                 </FormControl>
 
                 {/* MONTH */}
-
                 <FormControl
                   size="small"
                   sx={{
@@ -485,16 +464,13 @@ function ExpensePage() {
           </Grid>
 
           {/* ADD BUTTON */}
-
           <Box
             sx={{
               display: "flex",
-
               justifyContent: {
                 xs: "center",
                 sm: "flex-end"
               },
-
               mt: {
                 xs: 3,
                 sm: 4
@@ -509,11 +485,8 @@ function ExpensePage() {
               fullWidth={isMobile}
               sx={{
                 borderRadius: 3,
-
                 borderWidth: 2,
-
                 textTransform: "none",
-
                 maxWidth: {
                   xs: "100%",
                   sm: 220
@@ -525,7 +498,6 @@ function ExpensePage() {
           </Box>
 
           {/* EXPENSE LIST */}
-
           <Box
             sx={{
               mt: {
@@ -540,7 +512,6 @@ function ExpensePage() {
                 setEditingExpense(
                   expense
                 );
-
                 setOpenForm(true);
               }}
               onDelete={
@@ -550,7 +521,6 @@ function ExpensePage() {
           </Box>
 
           {/* EXPENSE FORM */}
-
           <ExpenseForm
             open={openForm}
             onClose={() =>
@@ -566,7 +536,6 @@ function ExpensePage() {
       </Card>
 
       {/* DELETE POPUP */}
-
       <DeleteNotification
         open={openDeleteDialog}
         onClose={cancelDelete}

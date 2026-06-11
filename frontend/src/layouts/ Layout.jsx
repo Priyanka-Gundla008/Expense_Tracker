@@ -65,7 +65,7 @@ function Layout() {
         minHeight: "100vh",
         width: "100%",
         overflowX: "hidden",
-        backgroundColor: "#f5f5f5"
+        backgroundColor: "#f5f5f5",
       }}
     >
       {/* SIDEBAR */}
@@ -81,19 +81,14 @@ function Layout() {
         component="main"
         sx={{
           flexGrow: 1,
-
           width: {
             xs: "100%",
-            md: `calc(100% - 240px)`
+            md: `calc(100% - 240px)`,
           },
-
           minHeight: "100vh",
-
           overflowX: "hidden",
-
           transition: "all 0.3s ease",
-
-          boxSizing: "border-box"
+          boxSizing: "border-box",
         }}
       >
         {/* HEADER */}
@@ -105,23 +100,9 @@ function Layout() {
         <Box
           sx={{
             width: "100%",
-
             maxWidth: "100%",
-
             overflowX: "hidden",
-
             boxSizing: "border-box",
-
-            // mt: {
-            //   xs: "56px",
-            //   sm: "64px"
-            // },
-
-            // p: {
-            //   xs: 1,
-            //   sm: 2,
-            //   md: 3
-            // }
           }}
         >
           <Outlet />

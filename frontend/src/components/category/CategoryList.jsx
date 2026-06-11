@@ -8,7 +8,7 @@ import {
   Typography,
   TablePagination,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 
 import { deleteCategory } from "../../services/categoryService";
@@ -60,9 +60,7 @@ function CategoryList({ categoriesList = [], getAPI }) {
 
   const [page, setPage] = useState(0);
 
-  const [rowsPerPage, setRowsPerPage] = useState(
-    isSmallScreen ? 3 : 9
-  );
+  const [rowsPerPage, setRowsPerPage] = useState(isSmallScreen ? 3 : 9);
 
   const categoryIcons = {
     Food: <RestaurantIcon />,
@@ -76,7 +74,7 @@ function CategoryList({ categoriesList = [], getAPI }) {
     Pets: <PetsIcon />,
     Transport: <DirectionsCarIcon />,
     Mobile: <PhoneAndroidIcon />,
-    Subscriptions: <SubscriptionsIcon />
+    Subscriptions: <SubscriptionsIcon />,
   };
 
   const totalItems = categoriesList.length;
@@ -85,7 +83,7 @@ function CategoryList({ categoriesList = [], getAPI }) {
 
   const paginatedCategories = categoriesList.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * rowsPerPage + rowsPerPage,
   );
 
   useEffect(() => {
@@ -135,13 +133,13 @@ function CategoryList({ categoriesList = [], getAPI }) {
             sm: "repeat(2, 1fr)",
             md: "repeat(3, 1fr)",
             lg: "repeat(4, 1fr)",
-            xl: "repeat(5, 1fr)"
+            xl: "repeat(5, 1fr)",
           },
 
           gap: {
             xs: 2,
             sm: 2.5,
-            md: 3
+            md: 3,
           },
 
           alignItems: "stretch",
@@ -149,61 +147,76 @@ function CategoryList({ categoriesList = [], getAPI }) {
           px: {
             xs: 1,
             sm: 2,
-            md: 3
-          }
+            md: 3,
+          },
         }}
       >
         {/* ADD CATEGORY CARD */}
 
-<Box onClick={() => { setSelectedCategory(null); setOpenForm(true); }} sx={{ p: { xs: 2, sm: 2.5, md: 2 }, minHeight: { xs: 180, sm: 190, md: 180, lg: 170, xl: 150 }, borderRadius: "20px", textAlign: "center", border: "2px dashed", borderColor: theme.palette.primary.main, color: theme.palette.primary.main, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", transition: "0.3s", "&:hover": { backgroundColor: theme.palette.action.hover } }} >          <Avatar
+        <Box
+          onClick={() => {
+            setSelectedCategory(null);
+            setOpenForm(true);
+          }}
+          sx={{
+            p: { xs: 2, sm: 2.5, md: 2 },
+            minHeight: { xs: 180, sm: 190, md: 180, lg: 170, xl: 150 },
+            borderRadius: "20px",
+            textAlign: "center",
+            border: "2px dashed",
+            borderColor: theme.palette.primary.main,
+            color: theme.palette.primary.main,
+            cursor: "pointer",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "0.3s",
+            "&:hover": { backgroundColor: theme.palette.action.hover },
+          }}
+        >
+          {" "}
+          <Avatar
             sx={{
               mb: 1.5,
-
               width: {
-                xs: 40,
-                sm: 44,
-                md: 48
-              },
-
-              height: { 
                 xs: 40,
                 sm: 44,
                 md: 48,
               },
-
+              height: {
+                xs: 40,
+                sm: 44,
+                md: 48,
+              },
               bgcolor: "transparent",
-
               border: "2px dashed",
-
               borderColor: theme.palette.primary.main,
-
-              color: theme.palette.primary.main
+              color: theme.palette.primary.main,
             }}
           >
             <AddIcon fontSize="small" />
           </Avatar>
-
           <Typography
             fontWeight={700}
             sx={{
               fontSize: {
                 xs: 15,
                 sm: 16,
-                md: 16
-              }
+                md: 16,
+              },
             }}
           >
             Add Category
           </Typography>
-
           <Typography
             variant="body2"
             sx={{
               fontSize: {
                 xs: 12,
                 sm: 13,
-                md: 13
-              }
+                md: 13,
+              },
             }}
           >
             Create a new category
@@ -217,27 +230,19 @@ function CategoryList({ categoriesList = [], getAPI }) {
             key={index}
             onClick={() => {
               setSelectedCategory(cat);
-
               setOpenForm(true);
             }}
             sx={{
               width: "100%",
-
               height: "100%",
-
               borderRadius: 3,
-
               boxShadow: 5,
-
               transition: "0.3s",
-
               cursor: "pointer",
-
               "&:hover": {
                 transform: "translateY(-4px)",
-
-                boxShadow: 8
-              }
+                boxShadow: 8,
+              },
             }}
           >
             <CardContent
@@ -245,65 +250,42 @@ function CategoryList({ categoriesList = [], getAPI }) {
                 p: {
                   xs: 2,
                   sm: 2.5,
-                  md: 2
+                  md: 2,
                 },
-
-                height: "100%"
+                height: "100%",
               }}
             >
               <Box
                 sx={{
                   position: "relative",
-
                   width: "100%",
-
                   height: "100%",
-
                   minHeight: {
                     xs: 180,
                     sm: 190,
-                    md: 190
+                    md: 190,
                   },
-
                   borderRadius: "20px",
-
                   textAlign: "center",
-
                   background: "#fff",
-
                   boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-
                   display: "flex",
-
                   flexDirection: "column",
-
                   justifyContent: "center",
-
                   alignItems: "center",
-
                   p: 2,
-
                   "&::before": {
                     content: '""',
-
                     position: "absolute",
-
                     inset: 0,
-
                     borderRadius: "20px",
-
                     padding: "2px",
-
-                    background:
-                      "linear-gradient(135deg, #81c784, #66bb6a)",
-
+                    background: "linear-gradient(135deg, #81c784, #66bb6a)",
                     WebkitMask:
                       "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-
                     WebkitMaskComposite: "xor",
-
-                    maskComposite: "exclude"
-                  }
+                    maskComposite: "exclude",
+                  },
                 }}
               >
                 {/* DELETE ICON */}
@@ -311,26 +293,19 @@ function CategoryList({ categoriesList = [], getAPI }) {
                 <DeleteOutlineIcon
                   sx={{
                     position: "absolute",
-
                     top: 8,
-
                     right: 8,
-
                     fontSize: {
                       xs: 20,
                       sm: 22,
-                      md: 22
+                      md: 22,
                     },
-
                     color: "error.main",
-
                     cursor: "pointer",
-
-                    zIndex: 10
+                    zIndex: 10,
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
-
                     handleDelete(cat.id);
                   }}
                 />
@@ -340,22 +315,18 @@ function CategoryList({ categoriesList = [], getAPI }) {
                 <Avatar
                   sx={{
                     mb: 1.5,
-
                     width: {
                       xs: 40,
                       sm: 44,
-                      md: 48
+                      md: 48,
                     },
-
                     height: {
                       xs: 40,
                       sm: 44,
-                      md: 48
+                      md: 48,
                     },
-
                     bgcolor: "#e8f5e9",
-
-                    color: "#2e7d32"
+                    color: "#2e7d32",
                   }}
                 >
                   {categoryIcons[cat.icon]}
@@ -370,8 +341,8 @@ function CategoryList({ categoriesList = [], getAPI }) {
                     fontSize: {
                       xs: 15,
                       sm: 16,
-                      md: 16
-                    }
+                      md: 16,
+                    },
                   }}
                 >
                   {cat.name}
@@ -384,12 +355,11 @@ function CategoryList({ categoriesList = [], getAPI }) {
                   color="text.secondary"
                   sx={{
                     textAlign: "center",
-
                     fontSize: {
                       xs: 12,
                       sm: 13,
-                      md: 13
-                    }
+                      md: 13,
+                    },
                   }}
                 >
                   Manage {cat.name.toLowerCase()} expenses
@@ -406,24 +376,20 @@ function CategoryList({ categoriesList = [], getAPI }) {
         <Box
           sx={{
             width: "100%",
-
             display: "flex",
-
             justifyContent: {
               xs: "center",
-              md: "flex-end"
+              md: "flex-end",
             },
-
             mt: {
               xs: 3,
-              sm: 4
+              sm: 4,
             },
-
             px: {
               xs: 1,
               sm: 2,
-              md: 3
-            }
+              md: 3,
+            },
           }}
         >
           <TablePagination
@@ -434,7 +400,6 @@ function CategoryList({ categoriesList = [], getAPI }) {
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={(e) => {
               setRowsPerPage(parseInt(e.target.value, 10));
-
               setPage(0);
             }}
             rowsPerPageOptions={rowsPerPageOptions}

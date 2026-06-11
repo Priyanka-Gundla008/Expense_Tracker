@@ -7,29 +7,46 @@ import {
   Select,
   MenuItem,
   Stack,
-  InputLabel
+  InputLabel,
 } from "@mui/material";
 import { ResponsivePie } from "@nivo/pie";
 import { getExpensesByCategory } from "../../services/expenseService";
 
 const monthMap = {
-  Jan: 1, Feb: 2, Mar: 3, Apr: 4,
-  May: 5, Jun: 6, Jul: 7, Aug: 8,
-  Sep: 9, Oct: 10, Nov: 11, Dec: 12,
+  Jan: 1,
+  Feb: 2,
+  Mar: 3,
+  Apr: 4,
+  May: 5,
+  Jun: 6,
+  Jul: 7,
+  Aug: 8,
+  Sep: 9,
+  Oct: 10,
+  Nov: 11,
+  Dec: 12,
 };
-
 
 export default function RechartsPie() {
   const theme = useTheme();
-  const [categoryData, setCategoryData] = useState([])
+  const [categoryData, setCategoryData] = useState([]);
 
   const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
   const currentYear = new Date().getFullYear();
   const currentMonth = months[new Date().getMonth()];
-
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
@@ -44,7 +61,6 @@ export default function RechartsPie() {
   const handleMonthChange = (e) => {
     setSelectedMonth(e.target.value);
   };
-
 
   const fetchExpenseByCategory = async () => {
     try {
@@ -62,7 +78,7 @@ export default function RechartsPie() {
         setMessage(response.message);
         return;
       }
-      const pieFormattedData = response.data.map(item => ({
+      const pieFormattedData = response.data.map((item) => ({
         id: item.category.name,
         label: item.category.id,
         value: item.amount,
@@ -163,13 +179,10 @@ export default function RechartsPie() {
               justifyContent: "center",
             }}
           >
-            <Typography color="red">
-              {message}
-            </Typography>
+            <Typography color="red">{message}</Typography>
           </Box>
-        )
-        }
+        )}
       </Box>
-    </Box >
+    </Box>
   );
 }

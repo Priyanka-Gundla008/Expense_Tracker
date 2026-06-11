@@ -11,7 +11,7 @@ import {
   Snackbar,
   Alert,
   useTheme,
-  Divider
+  Divider,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ function ResetPassword() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [token, setToken] = useState("")
+  const [token, setToken] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     password: "",
@@ -44,7 +44,7 @@ function ResetPassword() {
     }
   }, [location.search]);
 
-  console.log("Token", token)
+  console.log("Token", token);
 
   const validators = {
     password: (value) => {
@@ -53,7 +53,8 @@ function ResetPassword() {
       if (!/(?=.*[a-z])/.test(value)) return "Must include a lowercase letter";
       if (!/(?=.*[A-Z])/.test(value)) return "Must include an uppercase letter";
       if (!/(?=.*\d)/.test(value)) return "Must include a number";
-      if (!/(?=.*[@$!%*?&])/.test(value)) return "Must include a special character";
+      if (!/(?=.*[@$!%*?&])/.test(value))
+        return "Must include a special character";
       return "";
     },
     confirmPassword: (value) => {
@@ -107,74 +108,74 @@ function ResetPassword() {
 
   return (
     <Box
-  sx={{
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: theme.palette.background.default,
-    px: {
-      xs: 2,
-      sm: 3,
-    },
-    py: {
-      xs: 2,
-      sm: 0,
-    },
-  }}
->
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: theme.palette.background.default,
+        px: {
+          xs: 2,
+          sm: 3,
+        },
+        py: {
+          xs: 2,
+          sm: 0,
+        },
+      }}
+    >
       <Card
-  sx={{
-    width: "100%",
-    maxWidth: {
-      xs: 380,
-      sm: 450,
-      md: 500,
-    },
-    borderRadius: {
-      xs: 2,
-      sm: 3,
-    },
-    boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
-    backgroundColor: theme.palette.background.paper,
-  }}
->
-<CardContent
-  sx={{
-    p: {
-      xs: 2,
-      sm: 3,
-    },
-  }}
->        <Typography
-  sx={{
-    mb: 1.5,
-    fontWeight: 700,
-    textAlign: "center",
-    color: theme.palette.primary.main,
-    fontSize: {
-      xs: "1.8rem",
-      sm: "2.2rem",
-    },
-  }}
->
-  Reset Password
-</Typography>
-
-         <Typography
-  sx={{
-    mb: 2.5,
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    fontSize: {
-      xs: "0.85rem",
-      sm: "0.95rem",
-    },
-  }}
->
-  Enter your new password below
-</Typography>
-
+        sx={{
+          width: "100%",
+          maxWidth: {
+            xs: 380,
+            sm: 450,
+            md: 500,
+          },
+          borderRadius: {
+            xs: 2,
+            sm: 3,
+          },
+          boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
+          backgroundColor: theme.palette.background.paper,
+        }}
+      >
+        <CardContent
+          sx={{
+            p: {
+              xs: 2,
+              sm: 3,
+            },
+          }}
+        >
+          {" "}
+          <Typography
+            sx={{
+              mb: 1.5,
+              fontWeight: 700,
+              textAlign: "center",
+              color: theme.palette.primary.main,
+              fontSize: {
+                xs: "1.8rem",
+                sm: "2.2rem",
+              },
+            }}
+          >
+            Reset Password
+          </Typography>
+          <Typography
+            sx={{
+              mb: 2.5,
+              textAlign: "center",
+              color: theme.palette.text.secondary,
+              fontSize: {
+                xs: "0.85rem",
+                sm: "0.95rem",
+              },
+            }}
+          >
+            Enter your new password below
+          </Typography>
           <form onSubmit={handleSubmit}>
             {/* New Password */}
             <TextField
@@ -199,17 +200,16 @@ function ResetPassword() {
                     </IconButton>
                   </InputAdornment>
                 ),
-                
               }}
               sx={{
-  "& .MuiInputBase-root": {
-    borderRadius: "15px",
-    fontSize: {
-      xs: "0.9rem",
-      sm: "1rem",
-    },
-  },
-}}
+                "& .MuiInputBase-root": {
+                  borderRadius: "15px",
+                  fontSize: {
+                    xs: "0.9rem",
+                    sm: "1rem",
+                  },
+                },
+              }}
             />
 
             {/* Confirm Password */}
@@ -230,67 +230,67 @@ function ResetPassword() {
                 ),
               }}
               sx={{
-  "& .MuiInputBase-root": {
-    borderRadius: "15px",
-    fontSize: {
-      xs: "0.9rem",
-      sm: "1rem",
-    },
-  },
-}}
+                "& .MuiInputBase-root": {
+                  borderRadius: "15px",
+                  fontSize: {
+                    xs: "0.9rem",
+                    sm: "1rem",
+                  },
+                },
+              }}
             />
 
             <Divider
-  sx={{
-    my: {
-      xs: 2,
-      sm: 2.5,
-    },
-  }}
-/>
+              sx={{
+                my: {
+                  xs: 2,
+                  sm: 2.5,
+                },
+              }}
+            />
 
-           <Button
-  type="submit"
-  fullWidth
-  variant="contained"
-  sx={{
-    mt: 1,
-    py: {
-      xs: 1.2,
-      sm: 1.5,
-    },
-    fontSize: {
-      xs: "0.9rem",
-      sm: "1rem",
-    },
-    borderRadius: "15px",
-    fontWeight: 600,
-    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-    "&:hover": {
-      background: `linear-gradient(135deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
-    },
-  }}
->
-  Reset Password
-</Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 1,
+                py: {
+                  xs: 1.2,
+                  sm: 1.5,
+                },
+                fontSize: {
+                  xs: "0.9rem",
+                  sm: "1rem",
+                },
+                borderRadius: "15px",
+                fontWeight: 600,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                "&:hover": {
+                  background: `linear-gradient(135deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
+                },
+              }}
+            >
+              Reset Password
+            </Button>
           </form>
         </CardContent>
       </Card>
 
-     <Snackbar
-  open={notification.open}
-  autoHideDuration={4000}
-  onClose={() =>
-    setNotification({
-      ...notification,
-      open: false,
-    })
-  }
-  anchorOrigin={{
-    vertical: "top",
-    horizontal: window.innerWidth < 600 ? "center" : "right",
-  }}
->
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={4000}
+        onClose={() =>
+          setNotification({
+            ...notification,
+            open: false,
+          })
+        }
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: window.innerWidth < 600 ? "center" : "right",
+        }}
+      >
         <Alert severity={notification.severity} variant="filled">
           {notification.message}
         </Alert>

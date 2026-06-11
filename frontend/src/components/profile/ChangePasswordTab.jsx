@@ -11,8 +11,8 @@ import {
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
 
 export default function ChangePasswordTab({ onChangePassword, onCancel }) {
-    const theme = useTheme();
-  
+  const theme = useTheme();
+
   const [showPass, setShowPass] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
@@ -32,7 +32,9 @@ export default function ChangePasswordTab({ onChangePassword, onCancel }) {
     } else if (passwordForm.newPassword.length < 8) {
       errors.newPassword = "Password must be at least 8 characters";
     } else if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(passwordForm.newPassword)
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(
+        passwordForm.newPassword,
+      )
     ) {
       errors.newPassword =
         "Must include uppercase, lowercase, number & special character";
@@ -61,12 +63,20 @@ export default function ChangePasswordTab({ onChangePassword, onCancel }) {
       currentPassword: passwordForm.currentPassword,
       newPassword: passwordForm.newPassword,
     });
-    setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setPasswordForm({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
     setPasswordErrors({});
   };
 
   const handleCancel = () => {
-    setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setPasswordForm({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
     setPasswordErrors({});
     onCancel();
   };
@@ -157,7 +167,13 @@ export default function ChangePasswordTab({ onChangePassword, onCancel }) {
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", sm: "column", md: "row", lg: "row", xl: "row" },
+          flexDirection: {
+            xs: "column",
+            sm: "column",
+            md: "row",
+            lg: "row",
+            xl: "row",
+          },
           justifyContent: "flex-end",
           gap: 2,
           mt: 3,
@@ -171,17 +187,17 @@ export default function ChangePasswordTab({ onChangePassword, onCancel }) {
           variant="contained"
           onClick={handleSubmit}
           sx={{
-          py: 1,
-          px: 3,
-                      width: { xs: "100%", sm: "100%", md: "auto" },
+            py: 1,
+            px: 3,
+            width: { xs: "100%", sm: "100%", md: "auto" },
 
-        //   fontWeight: 600,
-          borderRadius: "15px",
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-          "&:hover": {
-            background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
-          },
-        }}
+            //   fontWeight: 600,
+            borderRadius: "15px",
+            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+            "&:hover": {
+              background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.primary.main} 100%)`,
+            },
+          }}
         >
           Update Password
         </Button>
