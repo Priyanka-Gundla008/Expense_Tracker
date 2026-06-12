@@ -142,7 +142,7 @@ export default function Profile() {
     >
       {/* Title */}
       <Typography variant="h5" fontWeight={700} sx={{ mb: 2 }}>
-        My Profile
+        {editing ? "Edit My Profile" : "My Profile"}
       </Typography>
 
       {/* Tabs */}

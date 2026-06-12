@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 import Dashboard from "../components/Dashboard";
@@ -9,7 +14,6 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import PasswordResetConfirmation from "../pages/auth/EmailConfirmation";
 import ResetPassword from "../pages/auth/ResetPassword";
 import Profile from "../pages/ProfileInfo";
-
 
 const isAuthenticated = () => !!localStorage.getItem("accessToken");
 
@@ -22,19 +26,18 @@ function AppRouter() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-
-
         <Route
-          element={isAuthenticated() ? <Layout /> : <Navigate to="/login" />}
-        >
-        <Route path="/email-confirmation" element={<PasswordResetConfirmation />} />
+          path="/email-confirmation"
+          element={<PasswordResetConfirmation />}
+        />
         <Route path="/reset-password" element={<ResetPassword />} />
+
+        <Route element={isAuthenticated() ? <Layout /> : <Navigate to="/" />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/expenses" element={<ExpensePage />} />
           <Route path="/category" element={<Category />} />
           <Route path="/profile" element={<Profile />} />
-
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />

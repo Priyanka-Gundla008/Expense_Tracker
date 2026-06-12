@@ -24,8 +24,8 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
-
     const user = await this.usersService.findByEmail(email);
+
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -71,7 +71,6 @@ export class AuthService {
 
 
     // TODO: Send email
-    console.log('Reset Password Link:', resetLink);
     await this.mailService.sendResetPasswordEmail(
       user.email,
       resetLink,
@@ -135,7 +134,6 @@ export class AuthService {
         email: user.email,
       };
 
-      console.log("jwtPayload", jwtPayload)
       return {
         message: 'Google login successful',
         token: this.jwtService.sign(jwtPayload),

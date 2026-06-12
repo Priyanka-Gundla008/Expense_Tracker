@@ -81,10 +81,10 @@ export class UsersService {
 
   // UPDATE PASSWORD
   async updatePassword(userId: string, newPassword: string) {
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     return this.usersRepository.update(userId, {
-      password: hashedPassword,
+      password: newPassword,
       resetPasswordToken: null,
       resetPasswordExpires: null,
     });

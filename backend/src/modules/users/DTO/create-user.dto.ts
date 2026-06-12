@@ -22,8 +22,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(30)
-  @Matches(/^[A-Za-z]+$/, {
-    message: 'Name can contain only letters',
+  @Matches(/^[A-Za-z ]+$/, {
+    message: 'Name can contain only letters and spaces',
   })
   @Transform(({ value }) => value.trim())
   name: string;
@@ -78,8 +78,7 @@ export class CreateUserDto {
     description: 'User working designation',
   })
   @IsString()
-  @IsNotEmpty()
-  @MinLength(2)
+  @IsOptional()
   @MaxLength(50)
   designation: string;
 

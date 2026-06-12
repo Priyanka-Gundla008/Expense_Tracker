@@ -329,164 +329,191 @@ function ExpenseList({ expenses = [], onEdit, onDelete }) {
             </TableHead>
 
             {/* TABLE BODY */}
-
             <TableBody>
-              {paginatedExpenses.map((expense, index) => (
-                <TableRow key={expense.id} hover>
-                  {/* SERIAL NUMBER */}
+              {paginatedExpenses.length > 0 ? (
+                paginatedExpenses.map((expense, index) => (
+                  <TableRow key={expense.id} hover>
+                    {/* SERIAL NUMBER */}
 
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: {
-                        sm: "0.85rem",
-                        md: "0.95rem",
-                      },
-                    }}
-                  >
-                    {page * rowsPerPage + index + 1}
-                  </TableCell>
-
-                  {/* TITLE */}
-
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: {
-                        sm: "0.85rem",
-                        md: "0.95rem",
-                      },
-                    }}
-                  >
-                    {expense.title}
-                  </TableCell>
-
-                  {/* CATEGORY */}
-
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: {
-                        sm: "0.85rem",
-                        md: "0.95rem",
-                      },
-                    }}
-                  >
-                    {expense.category?.name}
-                  </TableCell>
-
-                  {/* AMOUNT */}
-
-                  <TableCell align="center">
-                    <Box
+                    <TableCell
+                      align="center"
                       sx={{
-                        display: "inline-block",
-
-                        px: {
-                          sm: 1.5,
-                          md: 2,
+                        fontSize: {
+                          sm: "0.85rem",
+                          md: "0.95rem",
                         },
+                      }}
+                    >
+                      {page * rowsPerPage + index + 1}
+                    </TableCell>
 
-                        py: 0.5,
+                    {/* TITLE */}
 
-                        borderRadius: "10px",
+                    <TableCell
+                      align="center"
+                      sx={{
+                        fontSize: {
+                          sm: "0.85rem",
+                          md: "0.95rem",
+                        },
+                      }}
+                    >
+                      {expense.title}
+                    </TableCell>
 
-                        backgroundColor: "#d1f9d5ff",
+                    {/* CATEGORY */}
 
-                        color: theme.palette.text.primary,
+                    <TableCell
+                      align="center"
+                      sx={{
+                        fontSize: {
+                          sm: "0.85rem",
+                          md: "0.95rem",
+                        },
+                      }}
+                    >
+                      {expense.category?.name}
+                    </TableCell>
 
-                        fontWeight: 700,
+                    {/* AMOUNT */}
 
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          display: "inline-block",
+
+                          px: {
+                            sm: 1.5,
+                            md: 2,
+                          },
+
+                          py: 0.5,
+
+                          borderRadius: "10px",
+
+                          backgroundColor: "#d1f9d5ff",
+
+                          color: theme.palette.text.primary,
+
+                          fontWeight: 700,
+
+                          fontSize: {
+                            sm: "0.85rem",
+                            md: "0.95rem",
+                          },
+
+                          minWidth: {
+                            sm: 70,
+                            md: 90,
+                          },
+                        }}
+                      >
+                        ₹ {expense.amount}
+                      </Box>
+                    </TableCell>
+
+                    {/* DATE */}
+
+                    <TableCell
+                      align="center"
+                      sx={{
                         fontSize: {
                           sm: "0.85rem",
                           md: "0.95rem",
                         },
 
-                        minWidth: {
-                          sm: 70,
-                          md: 90,
-                        },
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      ₹ {expense.amount}
+                      {expense.date}
+                    </TableCell>
+
+                    {/* ACTIONS */}
+
+                    <TableCell align="center">
+                      <Stack
+                        direction={{
+                          sm: "column",
+                          md: "row",
+                        }}
+                        spacing={1}
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          color="edit"
+                          startIcon={<EditIcon />}
+                          sx={{
+                            borderRadius: "10px",
+
+                            textTransform: "none",
+
+                            fontWeight: 600,
+
+                            minWidth: {
+                              sm: 90,
+                              md: 70,
+                            },
+                          }}
+                          onClick={() => onEdit(expense)}
+                        >
+                          Edit
+                        </Button>
+
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          color="error"
+                          startIcon={<DeleteIcon />}
+                          sx={{
+                            borderRadius: "10px",
+
+                            textTransform: "none",
+
+                            fontWeight: 600,
+
+                            minWidth: {
+                              sm: 90,
+                              md: 70,
+                            },
+                          }}
+                          onClick={() => onDelete(expense.id)}
+                        >
+                          Delete
+                        </Button>
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} align="center">
+                    <Box
+                      sx={{
+                        py: 4,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        color="text.secondary"
+                        fontWeight={600}
+                      >
+                        No Expenses Found
+                      </Typography>
+
+                      <Typography variant="body2" color="text.secondary">
+                        You haven't added any expenses yet.
+                      </Typography>
                     </Box>
                   </TableCell>
-
-                  {/* DATE */}
-
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: {
-                        sm: "0.85rem",
-                        md: "0.95rem",
-                      },
-
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {expense.date}
-                  </TableCell>
-
-                  {/* ACTIONS */}
-
-                  <TableCell align="center">
-                    <Stack
-                      direction={{
-                        sm: "column",
-                        md: "row",
-                      }}
-                      spacing={1}
-                      justifyContent="center"
-                      alignItems="center"
-                    >
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        color="edit"
-                        startIcon={<EditIcon />}
-                        sx={{
-                          borderRadius: "10px",
-
-                          textTransform: "none",
-
-                          fontWeight: 600,
-
-                          minWidth: {
-                            sm: 90,
-                            md: 70,
-                          },
-                        }}
-                        onClick={() => onEdit(expense)}
-                      >
-                        Edit
-                      </Button>
-
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        color="error"
-                        startIcon={<DeleteIcon />}
-                        sx={{
-                          borderRadius: "10px",
-
-                          textTransform: "none",
-
-                          fontWeight: 600,
-
-                          minWidth: {
-                            sm: 90,
-                            md: 70,
-                          },
-                        }}
-                        onClick={() => onDelete(expense.id)}
-                      >
-                        Delete
-                      </Button>
-                    </Stack>
-                  </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
 
