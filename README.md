@@ -63,7 +63,7 @@ The Login page allows registered users to securely access the Expense Tracker ap
 
 The Sign Up page enables new users to create an account by providing their basic details and credentials.
 
-<img src="screenshots/Authentication/signup.png" alt="Sign Up Page" width="900">
+<img src="screenshorts/Authentication/sign-up.png" alt="Sign Up Page" width="900">
 
 ---
 
